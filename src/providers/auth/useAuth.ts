@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProfile } from './useProfile';
@@ -11,13 +10,35 @@ export const useAuthState = () => {
 
   useEffect(() => {
     let mounted = true;
+    let authTimeout: NodeJS.Timeout;
     
     const initAuth = async () => {
       if (!mounted) return;
       
       setLoading(true);
+      
+      // Set a timeout to prevent infinite loading
+      authTimeout = setTimeout(() => {
+        if (mounted && loading) {
+          console.warn('Auth initialization timed out');
+          setLoading(false);
+          setUser(null);
+          setProfile(null);
+        }
+      }, 5000); // 5 second timeout
+      
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error.message);
+          if (mounted) {
+            setUser(null);
+            setProfile(null);
+            setLoading(false);
+          }
+          return;
+        }
         
         if (session?.user && mounted) {
           setUser(session.user);
@@ -35,6 +56,7 @@ export const useAuthState = () => {
       } finally {
         if (mounted) {
           setLoading(false);
+          clearTimeout(authTimeout);
         }
       }
     };
@@ -64,6 +86,7 @@ export const useAuthState = () => {
 
     return () => {
       mounted = false;
+      clearTimeout(authTimeout);
       subscription.unsubscribe();
     };
   }, []);
