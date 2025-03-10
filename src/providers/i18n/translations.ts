@@ -25,6 +25,27 @@ export interface Translations {
   unauthorized: string;
   goBackHome: string;
   searchPlaceholder: string;
+  lightMode: string;
+  darkMode: string;
+  highContrastMode: string;
+  systemTheme: string;
+  skipToContent: string;
+  english: string;
+  hebrew: string;
+  accessDenied: string;
+  unauthorizedDescription: string;
+  backToHome: string;
+  goBack: string;
+  fileTooLarge: string;
+  profileSettings: string;
+  updateProfile: string;
+  changeAvatar: string;
+  emailChangeInfo: string;
+  cancel: string;
+  uploading: string;
+  saveChanges: string;
+  signedOut: string;
+  profileUpdated: string;
 }
 
 export const translations = {
@@ -55,6 +76,27 @@ export const translations = {
     unauthorized: 'Unauthorized',
     goBackHome: 'Go back home',
     searchPlaceholder: 'Search tasks, projects, and goals...',
+    lightMode: 'Light Mode',
+    darkMode: 'Dark Mode',
+    highContrastMode: 'High Contrast',
+    systemTheme: 'System',
+    skipToContent: 'Skip to content',
+    english: 'English',
+    hebrew: 'Hebrew',
+    accessDenied: 'Access Denied',
+    unauthorizedDescription: 'You do not have permission to access this page.',
+    backToHome: 'Back to Home',
+    goBack: 'Go Back',
+    fileTooLarge: 'File is too large',
+    profileSettings: 'Profile Settings',
+    updateProfile: 'Update Profile',
+    changeAvatar: 'Change Avatar',
+    emailChangeInfo: 'Email change requires confirmation',
+    cancel: 'Cancel',
+    uploading: 'Uploading...',
+    saveChanges: 'Save Changes',
+    signedOut: 'Signed out successfully',
+    profileUpdated: 'Profile updated successfully',
   },
   he: {
     myDay: 'היום שלי',
@@ -83,5 +125,26 @@ export const translations = {
     unauthorized: 'לא מורשה',
     goBackHome: 'חזור הביתה',
     searchPlaceholder: 'חיפוש משימות, פרוייקטים ויעדים...',
+    lightMode: 'מצב בהיר',
+    darkMode: 'מצב כהה',
+    highContrastMode: 'ניגודיות גבוהה',
+    systemTheme: 'מערכת',
+    skipToContent: 'דלג לתוכן',
+    english: 'אנגלית',
+    hebrew: 'עברית',
+    accessDenied: 'הגישה נדחתה',
+    unauthorizedDescription: 'אין לך הרשאה לגשת לדף זה.',
+    backToHome: 'חזרה לדף הבית',
+    goBack: 'חזור',
+    fileTooLarge: 'הקובץ גדול מדי',
+    profileSettings: 'הגדרות פרופיל',
+    updateProfile: 'עדכן פרופיל',
+    changeAvatar: 'שנה תמונת פרופיל',
+    emailChangeInfo: 'שינוי כתובת דואר אלקטרוני דורש אישור',
+    cancel: 'ביטול',
+    uploading: 'מעלה...',
+    saveChanges: 'שמור שינויים',
+    signedOut: 'התנתקת בהצלחה',
+    profileUpdated: 'הפרופיל עודכן בהצלחה',
   }
 };
