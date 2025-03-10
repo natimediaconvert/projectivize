@@ -8,7 +8,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-secondary/30">
         <Navigation />
-        <main className="flex-1 p-6 overflow-auto animate-fade-in">
+        <main className="flex-1 p-4 md:p-6 overflow-auto animate-fade-in">
           {children}
         </main>
       </div>
