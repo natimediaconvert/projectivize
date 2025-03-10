@@ -1,10 +1,12 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
 
 type User = any | null;
-type Role = 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead';
+// Update the Role type to include all possible roles from both the database and the UI
+type Role = 'admin' | 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead';
 
 interface UserProfile {
   id: string;

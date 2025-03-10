@@ -5,7 +5,7 @@ import { useAuth } from '@/providers/AuthProvider';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRoles?: Array<'admin' | 'manager' | 'team_member' | 'guest'>;
+  requiredRoles?: Array<'admin' | 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead'>;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
