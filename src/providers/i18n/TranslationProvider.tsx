@@ -13,7 +13,9 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const { language } = useTheme();
   
   const t = (key: keyof Translations): string => {
-    return translations[language]?.[key] || translations.en[key] || key;
+    const translation = translations[language]?.[key] || translations.en[key] || key;
+    // Ensure the return value is always a string
+    return String(translation);
   };
 
   return (
