@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { format } from 'date-fns';
-import { CalendarIcon, Clock, Edit2, Trash2, User, MessageSquare, Calendar, CheckCircle2, XCircle } from 'lucide-react';
+import { CalendarIcon, Clock, Edit2, Trash2, User, MessageSquare, Calendar, CheckCircle2, XCircle, Users } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';

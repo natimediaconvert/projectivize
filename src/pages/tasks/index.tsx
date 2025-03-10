@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { startOfDay, endOfWeek, isAfter, isBefore, parseISO } from 'date-fns';
@@ -11,12 +10,25 @@ import TaskDetails from '@/components/tasks/TaskDetails';
 import { Button } from '@/components/ui/button';
 import { CircleUserRound, Rows, Columns } from 'lucide-react';
 
+type TaskStatus = 'pending' | 'in_progress' | 'completed';
+type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
+type DateRange = 'all' | 'today' | 'thisWeek' | 'overdue' | 'none';
+
+type TaskFiltersType = {
+  search: string;
+  status: TaskStatus[];
+  priority: TaskPriority[];
+  assignee: string[];
+  team: string[];
+  dueDateRange: DateRange;
+};
+
 export default function TasksPage() {
   const queryClient = useQueryClient();
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<TaskFiltersType>({
     search: '',
-    status: [] as string[],
-    priority: [] as string[],
+    status: [] as TaskStatus[],
+    priority: [] as TaskPriority[],
     assignee: [] as string[],
     team: [] as string[],
     dueDateRange: 'all',
@@ -64,12 +76,12 @@ export default function TasksPage() {
 
       // Apply status filter
       if (filters.status && filters.status.length > 0) {
-        query = query.in('status', filters.status);
+        query = query.in('status', filters.status as TaskStatus[]);
       }
 
       // Apply priority filter
       if (filters.priority && filters.priority.length > 0) {
-        query = query.in('priority', filters.priority);
+        query = query.in('priority', filters.priority as TaskPriority[]);
       }
 
       // Apply assignee filter
@@ -168,7 +180,15 @@ export default function TasksPage() {
 
   // Handle filter changes
   const handleFilterChange = useCallback((newFilters: any) => {
-    setFilters(newFilters);
+    // Ensure we properly type-cast the incoming filters
+    setFilters({
+      search: newFilters.search || '',
+      status: (newFilters.status || []) as TaskStatus[],
+      priority: (newFilters.priority || []) as TaskPriority[],
+      assignee: newFilters.assignee || [],
+      team: newFilters.team || [],
+      dueDateRange: (newFilters.dueDateRange || 'all') as DateRange,
+    });
   }, []);
 
   // Handle task click to view details

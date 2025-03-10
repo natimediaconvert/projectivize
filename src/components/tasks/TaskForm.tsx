@@ -141,6 +141,8 @@ export default function TaskForm({ initialData, onSuccess, onCancel, teamId }: T
 
       const taskData = {
         ...values,
+        // Convert Date object to ISO string for Supabase
+        due_date: values.due_date ? values.due_date.toISOString() : null,
         created_by: user.id,
         // For new tasks, it's an insert. For existing, it's an update
         ...(initialData ? { updated_at: new Date().toISOString() } : {}),

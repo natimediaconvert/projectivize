@@ -19,13 +19,17 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 
+type TaskStatus = 'pending' | 'in_progress' | 'completed';
+type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
+type DateRange = 'all' | 'today' | 'thisWeek' | 'overdue' | 'none';
+
 type FilterValues = {
   search: string;
-  status: string[];
-  priority: string[];
+  status: TaskStatus[];
+  priority: TaskPriority[];
   assignee: string[];
   team: string[];
-  dueDateRange: 'all' | 'today' | 'thisWeek' | 'overdue' | 'none';
+  dueDateRange: DateRange;
 };
 
 export default function TaskFilters({
@@ -34,7 +38,7 @@ export default function TaskFilters({
   availableUsers = [],
   filters,
 }: {
-  onFilter: (filters: any) => void;
+  onFilter: (filters: FilterValues) => void;
   availableTeams?: any[];
   availableUsers?: any[];
   filters?: Partial<FilterValues>;

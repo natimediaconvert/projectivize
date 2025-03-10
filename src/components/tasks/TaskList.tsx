@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Grid, List, KanbanSquare } from 'lucide-react';
+import { Grid, List, KanbanSquare, CircleDot, CircleEllipsis, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TaskCard from './TaskCard';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -31,10 +31,15 @@ export default function TaskList({
   
   const handleStatusChange = async (taskId: string, newStatus: string) => {
     try {
+      // Validate status against expected values
+      const validStatus = ['pending', 'in_progress', 'completed'].includes(newStatus) 
+        ? newStatus as 'pending' | 'in_progress' | 'completed'
+        : 'pending';
+
       const { error } = await supabase
         .from('tasks')
         .update({ 
-          status: newStatus,
+          status: validStatus,
           updated_at: new Date().toISOString()
         })
         .eq('id', taskId);
@@ -194,7 +199,7 @@ export default function TaskList({
           
           <div className="space-y-4">
             <h3 className="font-medium flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4" /> Completed
+              <CheckCircle className="h-4 w-4" /> Completed
             </h3>
             <div className="space-y-2">
               {tasks
