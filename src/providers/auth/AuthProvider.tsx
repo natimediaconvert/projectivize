@@ -3,18 +3,16 @@ import React from 'react';
 import AuthContext from './AuthContext';
 import { useAuthState } from './useAuth';
 import { useAuthMethods } from './useAuthMethods';
-import { useProfile } from './useProfile';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { profile, setProfile, fetchUserProfile, updateUserProfile } = useProfile();
-  const { user, loading: stateLoading, setUser } = useAuthState();
+  const { user, profile, loading: stateLoading, setUser, setProfile } = useAuthState();
   const { 
     signIn, 
     signUp, 
     signOut, 
     updateProfile, 
     loading: methodsLoading 
-  } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile, updateUserProfile });
+  } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile: () => Promise.resolve(null), updateUserProfile: () => Promise.resolve({ success: false }) });
 
   // Combine loading states
   const loading = stateLoading || methodsLoading;
