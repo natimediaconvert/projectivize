@@ -19,8 +19,6 @@ export default function AuthPage() {
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  // Check if user is already logged in - do this independently from the AuthProvider
-  // to avoid circular dependencies and ensure this page works correctly
   useEffect(() => {
     const checkUser = async () => {
       try {

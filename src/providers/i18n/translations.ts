@@ -1,4 +1,3 @@
-
 export interface Translations {
   english: string;
   hebrew: string;
@@ -47,6 +46,7 @@ export interface Translations {
   systemTheme: string;
   // Accessibility
   skipToContent: string;
+  checkingSession: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -98,6 +98,7 @@ export const translations: Record<string, Translations> = {
     systemTheme: "System Theme",
     // Accessibility
     skipToContent: "Skip to content",
+    checkingSession: "Checking session...",
   },
   he: {
     english: "אנגלית",
@@ -147,5 +148,6 @@ export const translations: Record<string, Translations> = {
     systemTheme: "ערכת נושא של המערכת",
     // Accessibility
     skipToContent: "דלג לתוכן",
+    checkingSession: "בודק סשן...",
   },
 };
