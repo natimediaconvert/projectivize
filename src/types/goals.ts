@@ -1,13 +1,11 @@
 
 export type GoalCategory = 'professional' | 'project' | 'personal';
-export type GoalPriority = 'low' | 'medium' | 'high';
 
 export interface Goal {
   id: string;
   title: string;
   description: string | null;
   category: GoalCategory;
-  priority?: GoalPriority;
   progress: number;
   deadline: string | null;
   user_id: string;

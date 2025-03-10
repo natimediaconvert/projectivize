@@ -11,7 +11,6 @@ import { FileDown } from 'lucide-react';
 import TaskCompletionChart from '@/components/reports/TaskCompletionChart';
 import PriorityDistributionChart from '@/components/reports/PriorityDistributionChart';
 import TeamPerformanceChart from '@/components/reports/TeamPerformanceChart';
-import GoalsProgressChart from '@/components/reports/GoalsProgressChart';
 import GenerateReportDialog from '@/components/reports/GenerateReportDialog';
 import ReportsList from '@/components/reports/ReportsList';
 
@@ -49,28 +48,13 @@ export default function ReportsPage() {
     setIsGenerateDialogOpen(false);
   };
 
-  const handleExportData = () => {
-    toast({
-      title: "Exporting data",
-      description: "Your data export is being prepared.",
-    });
-    
-    // In a real implementation, this would generate and download a CSV/PDF file
-    setTimeout(() => {
-      toast({
-        title: "Export ready",
-        description: "Your data has been exported successfully.",
-      });
-    }, 1500);
-  };
-
   return (
     <MainLayout>
       <div className="container mx-auto p-4 space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Reports & Analytics</h1>
           <div className="space-x-2">
-            <Button variant="outline" onClick={handleExportData} className="gap-2">
+            <Button variant="outline" onClick={() => {}} className="gap-2">
               <FileDown className="h-4 w-4" />
               Export Data
             </Button>
@@ -83,7 +67,6 @@ export default function ReportsPage() {
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="tasks">Task Analytics</TabsTrigger>
             <TabsTrigger value="teams">Team Performance</TabsTrigger>
-            <TabsTrigger value="goals">Goals Progress</TabsTrigger>
             <TabsTrigger value="saved">Saved Reports</TabsTrigger>
           </TabsList>
           
@@ -104,9 +87,9 @@ export default function ReportsPage() {
               </Card>
               
               <Card className="p-4">
-                <h3 className="font-semibold mb-2">Goals Progress</h3>
-                <div className="h-48">
-                  <GoalsProgressChart />
+                <h3 className="font-semibold mb-2">Recent Goals Progress</h3>
+                <div className="h-48 flex items-center justify-center">
+                  <p className="text-muted-foreground">Goal tracking analytics</p>
                 </div>
               </Card>
             </div>
@@ -133,15 +116,6 @@ export default function ReportsPage() {
               <h3 className="font-semibold mb-4">Team Performance Metrics</h3>
               <div className="h-64">
                 <TeamPerformanceChart showDetailed={true} />
-              </div>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="goals">
-            <Card className="p-6">
-              <h3 className="font-semibold mb-4">Goals Progress by Category</h3>
-              <div className="h-64">
-                <GoalsProgressChart />
               </div>
             </Card>
           </TabsContent>
