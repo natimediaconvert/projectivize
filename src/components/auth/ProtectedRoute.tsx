@@ -3,9 +3,12 @@ import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
 
+// Use the same UIRole type as defined in AuthProvider
+type UIRole = 'admin' | 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead';
+
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRoles?: Array<'admin' | 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead'>;
+  requiredRoles?: Array<UIRole>;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 

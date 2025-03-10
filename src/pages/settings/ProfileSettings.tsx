@@ -104,6 +104,7 @@ export default function ProfileSettings() {
         }
       }
       
+      // Only update the fields that are valid for the DB schema
       await updateProfile({
         full_name: fullName,
         profile_picture: profilePictureUrl,

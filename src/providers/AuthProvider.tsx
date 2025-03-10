@@ -1,17 +1,17 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
+import { Database } from '@/integrations/supabase/types';
 
 type User = any | null;
-// Update the Role type to include all possible roles from both the database and the UI
-type Role = 'admin' | 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead';
+type UIRole = 'admin' | 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead';
+type DBRole = Database['public']['Enums']['user_role'];
 
 interface UserProfile {
   id: string;
   full_name: string;
-  role: Role;
+  role: UIRole;
   profile_picture?: string | null;
 }
 
@@ -22,7 +22,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string) => Promise<void>;
   signOut: () => Promise<void>;
   loading: boolean;
-  updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
+  updateProfile: (updates: Partial<Omit<UserProfile, 'role'>> & { role?: DBRole }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -168,7 +168,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const updateProfile = async (updates: Partial<UserProfile>) => {
+  const updateProfile = async (updates: Partial<Omit<UserProfile, 'role'>> & { role?: DBRole }) => {
     try {
       if (!user) throw new Error('No user logged in');
       
@@ -182,7 +182,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
       
       if (profile) {
-        setProfile({ ...profile, ...updates });
+        setProfile({ ...profile, ...updates as any });
       }
       
       toast({
