@@ -40,6 +40,13 @@ export interface Translations {
   unauthorizedDescription: string;
   backToHome: string;
   goBack: string;
+  // Theme-related strings
+  lightMode: string;
+  darkMode: string;
+  highContrastMode: string;
+  systemTheme: string;
+  // Accessibility
+  skipToContent: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -84,6 +91,13 @@ export const translations: Record<string, Translations> = {
     unauthorizedDescription: "You don't have permission to access this page. Please contact your administrator if you believe this is an error.",
     backToHome: "Back to Home",
     goBack: "Go Back",
+    // Theme-related strings
+    lightMode: "Light Mode",
+    darkMode: "Dark Mode",
+    highContrastMode: "High Contrast Mode",
+    systemTheme: "System Theme",
+    // Accessibility
+    skipToContent: "Skip to content",
   },
   he: {
     english: "אנגלית",
@@ -126,5 +140,12 @@ export const translations: Record<string, Translations> = {
     unauthorizedDescription: "אין לך הרשאה לגשת לדף זה. אנא צור קשר עם המנהל שלך אם אתה מאמין שזו טעות.",
     backToHome: "חזרה לדף הבית",
     goBack: "חזור",
+    // Theme-related strings
+    lightMode: "מצב בהיר",
+    darkMode: "מצב כהה",
+    highContrastMode: "מצב ניגודיות גבוהה",
+    systemTheme: "ערכת נושא של המערכת",
+    // Accessibility
+    skipToContent: "דלג לתוכן",
   },
 };

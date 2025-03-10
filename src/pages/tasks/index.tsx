@@ -59,13 +59,18 @@ export default function TasksPage() {
     }, 1000);
   }, [filters, isMyTasksOnly, queryClient, refetch]);
 
+  // Create a function for handling task updates that matches the expected signature
+  const handleTaskOperation = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
   return (
     <MainLayout>
       <div className="container mx-auto p-4 space-y-6">
         <TaskHeader 
           isMyTasksOnly={isMyTasksOnly}
           onMyTasksToggle={() => setIsMyTasksOnly(!isMyTasksOnly)}
-          onTaskCreated={refetch}
+          onTaskCreated={handleTaskOperation}
         />
         
         <TaskFilters 
@@ -88,8 +93,8 @@ export default function TasksPage() {
             task={selectedTask}
             isOpen={!!selectedTask}
             onClose={() => setSelectedTask(null)}
-            onTaskUpdated={refetch}
-            onTaskDeleted={refetch}
+            onTaskUpdated={handleTaskOperation}
+            onTaskDeleted={handleTaskOperation}
           />
         )}
       </div>

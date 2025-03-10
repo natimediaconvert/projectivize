@@ -1,11 +1,10 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
 
 type User = any | null;
-type Role = 'admin' | 'manager' | 'team_member' | 'guest';
+type Role = 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead';
 
 interface UserProfile {
   id: string;
@@ -33,7 +32,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  // Fetch user profile data
   const fetchUserProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
@@ -52,10 +50,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Initialize auth state
   useEffect(() => {
     const initAuth = async () => {
-      // Check for active session
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session?.user) {
@@ -68,7 +64,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     initAuth();
 
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (session?.user) {
@@ -82,13 +77,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // Cleanup
     return () => {
       subscription.unsubscribe();
     };
   }, []);
 
-  // Sign in with email/password
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
@@ -118,7 +111,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Sign up with email/password
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
       setLoading(true);
@@ -151,7 +143,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Sign out
   const signOut = async () => {
     try {
       setLoading(true);
@@ -175,7 +166,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Update user profile
   const updateProfile = async (updates: Partial<UserProfile>) => {
     try {
       if (!user) throw new Error('No user logged in');
@@ -189,7 +179,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) throw error;
       
-      // Update local profile state
       if (profile) {
         setProfile({ ...profile, ...updates });
       }
