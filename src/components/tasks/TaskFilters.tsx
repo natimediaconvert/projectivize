@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Search, Filter, X, Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -29,6 +30,15 @@ type FilterValues = {
   assignee: string[];
   team: string[];
   dueDateRange: DateRange;
+};
+
+// Type guards to check if a string is a valid TaskStatus or TaskPriority
+const isTaskStatus = (value: string): value is TaskStatus => {
+  return ['pending', 'in_progress', 'completed'].includes(value);
+};
+
+const isTaskPriority = (value: string): value is TaskPriority => {
+  return ['low', 'medium', 'high', 'urgent'].includes(value);
 };
 
 export default function TaskFilters({
@@ -112,20 +122,24 @@ export default function TaskFilters({
     const currentValues = watch(field) || [];
     
     if (field === 'status') {
-      const typedValue = value as TaskStatus;
-      const newValues = currentValues.includes(typedValue)
-        ? (currentValues as TaskStatus[]).filter(v => v !== typedValue)
-        : [...(currentValues as TaskStatus[]), typedValue];
-      
-      setValue('status', newValues);
+      // Only proceed if value is a valid TaskStatus
+      if (isTaskStatus(value)) {
+        const newValues = currentValues.includes(value)
+          ? (currentValues as TaskStatus[]).filter(v => v !== value)
+          : [...(currentValues as TaskStatus[]), value];
+        
+        setValue('status', newValues);
+      }
     } 
     else if (field === 'priority') {
-      const typedValue = value as TaskPriority;
-      const newValues = currentValues.includes(typedValue)
-        ? (currentValues as TaskPriority[]).filter(v => v !== typedValue)
-        : [...(currentValues as TaskPriority[]), typedValue];
-      
-      setValue('priority', newValues);
+      // Only proceed if value is a valid TaskPriority
+      if (isTaskPriority(value)) {
+        const newValues = currentValues.includes(value)
+          ? (currentValues as TaskPriority[]).filter(v => v !== value)
+          : [...(currentValues as TaskPriority[]), value];
+        
+        setValue('priority', newValues);
+      }
     }
     else {
       // For 'assignee' and 'team' which are string arrays
@@ -170,11 +184,11 @@ export default function TaskFilters({
                     {statusOptions.map(option => (
                       <Badge
                         key={option.value}
-                        variant={activeFilters.status?.includes(option.value) ? "default" : "outline"}
+                        variant={activeFilters.status?.includes(option.value as TaskStatus) ? "default" : "outline"}
                         className="cursor-pointer"
                         onClick={() => toggleArrayFilter('status', option.value)}
                       >
-                        {activeFilters.status?.includes(option.value) && (
+                        {activeFilters.status?.includes(option.value as TaskStatus) && (
                           <Check className="h-3 w-3 mr-1" />
                         )}
                         {option.label}
@@ -189,11 +203,11 @@ export default function TaskFilters({
                     {priorityOptions.map(option => (
                       <Badge
                         key={option.value}
-                        variant={activeFilters.priority?.includes(option.value) ? "default" : "outline"}
+                        variant={activeFilters.priority?.includes(option.value as TaskPriority) ? "default" : "outline"}
                         className="cursor-pointer"
                         onClick={() => toggleArrayFilter('priority', option.value)}
                       >
-                        {activeFilters.priority?.includes(option.value) && (
+                        {activeFilters.priority?.includes(option.value as TaskPriority) && (
                           <Check className="h-3 w-3 mr-1" />
                         )}
                         {option.label}

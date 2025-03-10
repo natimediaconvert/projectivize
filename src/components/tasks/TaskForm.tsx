@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -141,10 +140,11 @@ export default function TaskForm({ initialData, onSuccess, onCancel, teamId }: T
 
       const taskData = {
         ...values,
+        // Ensure title is included and non-optional
+        title: values.title,
         // Convert Date object to ISO string for Supabase
         due_date: values.due_date ? values.due_date.toISOString() : null,
         created_by: user.id,
-        title: values.title, // Ensure title is always included and non-optional
         // For new tasks, it's an insert. For existing, it's an update
         ...(initialData ? { updated_at: new Date().toISOString() } : {}),
       };
