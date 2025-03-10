@@ -45,36 +45,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) {
         console.error('Error fetching user profile:', error.message);
-        return;
+        return null;
       }
       
       if (data) {
         setProfile(data as UserProfile);
+        return data;
       }
+      return null;
     } catch (error: any) {
       console.error('Error fetching user profile:', error.message);
+      return null;
     }
   };
 
   useEffect(() => {
+    let mounted = true;
+    
     const initAuth = async () => {
+      if (!mounted) return;
+      
       setLoading(true);
       try {
         const { data: { session } } = await supabase.auth.getSession();
         
-        if (session?.user) {
+        if (session?.user && mounted) {
           setUser(session.user);
           await fetchUserProfile(session.user.id);
-        } else {
+        } else if (mounted) {
           setUser(null);
           setProfile(null);
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
-        setUser(null);
-        setProfile(null);
+        if (mounted) {
+          setUser(null);
+          setProfile(null);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -83,18 +94,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event);
-        if (session?.user) {
-          setUser(session.user);
-          await fetchUserProfile(session.user.id);
-        } else {
+        
+        if (!mounted) return;
+        
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          if (session?.user) {
+            setUser(session.user);
+            await fetchUserProfile(session.user.id);
+          }
+        } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setProfile(null);
         }
+        
+        // Only set loading to false after we've processed the auth state change
         setLoading(false);
       }
     );
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);

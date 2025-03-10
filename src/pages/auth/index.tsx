@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -20,13 +19,14 @@ export default function AuthPage() {
   const { toast } = useToast();
   const { t } = useTranslation();
 
-  // Check if user is already logged in
+  // Check if user is already logged in - do this independently from the AuthProvider
+  // to avoid circular dependencies and ensure this page works correctly
   useEffect(() => {
     const checkUser = async () => {
       try {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
-          navigate('/');
+          navigate('/', { replace: true });
         }
       } catch (error) {
         console.error('Error checking session:', error);
@@ -36,17 +36,6 @@ export default function AuthPage() {
     };
     
     checkUser();
-    
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN') {
-        navigate('/');
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
   }, [navigate]);
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -99,7 +88,7 @@ export default function AuthPage() {
         toast({
           title: t('welcomeBack'),
         });
-        navigate('/');
+        navigate('/', { replace: true });
       }
     } catch (error: any) {
       toast({
@@ -116,7 +105,7 @@ export default function AuthPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <p className="text-lg">Checking session...</p>
+          <p className="text-lg">{t('checkingSession')}</p>
         </div>
       </div>
     );
