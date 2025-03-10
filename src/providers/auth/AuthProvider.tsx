@@ -6,15 +6,15 @@ import { useAuthMethods } from './useAuthMethods';
 import { useProfile } from './useProfile';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { profile, fetchUserProfile, updateUserProfile } = useProfile();
-  const { user, loading: stateLoading, setUser, setProfile } = useAuthState();
+  const { profile, setProfile, fetchUserProfile, updateUserProfile } = useProfile();
+  const { user, loading: stateLoading, setUser } = useAuthState();
   const { 
     signIn, 
     signUp, 
     signOut, 
     updateProfile, 
     loading: methodsLoading 
-  } = useAuthMethods(user, setUser, { fetchUserProfile, updateUserProfile });
+  } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile, updateUserProfile });
 
   // Combine loading states
   const loading = stateLoading || methodsLoading;

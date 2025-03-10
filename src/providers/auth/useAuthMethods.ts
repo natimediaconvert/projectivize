@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -6,10 +5,17 @@ import { useTranslation } from '@/providers/i18n/TranslationProvider';
 import { User, UserProfile } from './types';
 import { useProfile } from './useProfile';
 
+type ProfileHelpers = {
+  profile: UserProfile | null;
+  setProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>;
+  fetchUserProfile: ReturnType<typeof useProfile>['fetchUserProfile'];
+  updateUserProfile: ReturnType<typeof useProfile>['updateUserProfile'];
+};
+
 export const useAuthMethods = (
   user: User, 
   setUser: (user: User) => void,
-  { fetchUserProfile, updateUserProfile }: ReturnType<typeof useProfile>
+  { profile, setProfile, fetchUserProfile, updateUserProfile }: ProfileHelpers
 ) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -98,7 +104,7 @@ export const useAuthMethods = (
     }
   };
 
-  const updateProfile = async (updates: Partial<Omit<UserProfile, 'role'>> & { role?: any }) => {
+  const updateProfile = async (updates: Partial<Omit<UserProfile, "role">> & { role?: any }) => {
     try {
       if (!user) throw new Error('No user logged in');
       
