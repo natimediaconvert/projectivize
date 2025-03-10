@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from 'react';
 import { translations, type Translations } from './translations';
 import { useTheme } from '../ThemeProvider';
@@ -24,10 +25,10 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   );
 };
 
-export function useTranslation() {
+export const useTranslation = () => {
   const context = useContext(TranslationContext);
-  if (context === undefined) {
-    throw new Error("useTranslation must be used within a TranslationProvider");
+  if (!context) {
+    throw new Error('useTranslation must be used within a TranslationProvider');
   }
   return context;
-}
+};
