@@ -11,27 +11,37 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "@/providers/i18n/TranslationProvider";
+import { useTheme } from "@/providers/ThemeProvider";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 
-const navigationItems = [
-  { title: "My Day", icon: Calendar, path: "/my-day" },
-  { title: "Dashboard", icon: LayoutDashboard, path: "/" },
-  { title: "Tasks", icon: ListTodo, path: "/tasks" },
-  { title: "Projects", icon: FolderKanban, path: "/projects" },
-  { title: "Team", icon: Users, path: "/team" },
-  { title: "Reports", icon: BarChart3, path: "/reports" },
-  { title: "Goals", icon: Target, path: "/goals" },
-  { title: "Settings", icon: Settings, path: "/settings" },
-];
-
-const Navigation = () => {
+export default function Navigation() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
+  const { direction } = useTheme();
+
+  const navigationItems = [
+    { title: t("myDay"), icon: Calendar, path: "/my-day" },
+    { title: t("dashboard"), icon: LayoutDashboard, path: "/" },
+    { title: t("tasks"), icon: ListTodo, path: "/tasks" },
+    { title: t("projects"), icon: FolderKanban, path: "/projects" },
+    { title: t("team"), icon: Users, path: "/team" },
+    { title: t("reports"), icon: BarChart3, path: "/reports" },
+    { title: t("goals"), icon: Target, path: "/goals" },
+    { title: t("settings"), icon: Settings, path: "/settings" },
+  ];
 
   return (
     <Sidebar>
       <SidebarContent>
-        <div className="flex items-center justify-center p-6">
+        <div className="flex items-center justify-between p-6">
           <img src="/lovable-uploads/5777b715-f615-4046-b1b4-1af3cd0a1135.png" alt="Logo" className="h-8" />
+          <div className="flex items-center space-x-1">
+            <ThemeToggle />
+            <LanguageToggle />
+          </div>
         </div>
         <SidebarGroup>
           <SidebarGroupLabel>QualiTasks</SidebarGroupLabel>
@@ -45,7 +55,7 @@ const Navigation = () => {
                       location.pathname === item.path ? "bg-primary text-white" : ""
                     }`}
                   >
-                    <item.icon className="h-4 w-4" />
+                    <item.icon className={`h-4 w-4 ${direction === "rtl" ? "sidebar-icon ml-2" : "mr-2"}`} />
                     <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -56,6 +66,4 @@ const Navigation = () => {
       </SidebarContent>
     </Sidebar>
   );
-};
-
-export default Navigation;
+}
