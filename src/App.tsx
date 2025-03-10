@@ -15,6 +15,8 @@ import TasksPage from "./pages/tasks";
 import AuthPage from "./pages/auth";
 import ProfileSettings from "./pages/settings/ProfileSettings";
 import Unauthorized from "./pages/Unauthorized";
+import GoalsPage from "./pages/goals";
+import ReportsPage from "./pages/reports";
 
 const queryClient = new QueryClient();
 
@@ -37,8 +39,8 @@ const App = () => (
                 <Route path="/my-day" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
                 <Route path="/projects" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
                 <Route path="/team" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
-                <Route path="/reports" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
-                <Route path="/goals" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
+                <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
+                <Route path="/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
