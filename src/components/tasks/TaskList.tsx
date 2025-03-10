@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Grid, List, KanbanSquare, CircleDot, CircleEllipsis, CheckCircle } from 'lucide-react';
+import { Grid, List, KanbanSquare, CircleDot as CircleDotIcon, CircleEllipsis as CircleEllipsisIcon, CheckCircle, CheckCircle2 as CheckCircle2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TaskCard from './TaskCard';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,6 +11,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+
+type TaskStatus = 'pending' | 'in_progress' | 'completed';
 
 export default function TaskList({
   tasks = [],
@@ -31,9 +32,8 @@ export default function TaskList({
   
   const handleStatusChange = async (taskId: string, newStatus: string) => {
     try {
-      // Validate status against expected values
       const validStatus = ['pending', 'in_progress', 'completed'].includes(newStatus) 
-        ? newStatus as 'pending' | 'in_progress' | 'completed'
+        ? newStatus as TaskStatus
         : 'pending';
 
       const { error } = await supabase
@@ -51,7 +51,6 @@ export default function TaskList({
         description: `Task status changed to ${newStatus.replace('_', ' ')}.`,
       });
       
-      // If parent component provided handler, call it
       if (onTaskStatusChange) {
         onTaskStatusChange(taskId, newStatus);
       }
@@ -153,7 +152,7 @@ export default function TaskList({
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
           <div className="space-y-4">
             <h3 className="font-medium flex items-center gap-2">
-              <CircleDot className="h-4 w-4" /> To Do
+              <CircleDotIcon className="h-4 w-4" /> To Do
             </h3>
             <div className="space-y-2">
               {tasks
@@ -176,7 +175,7 @@ export default function TaskList({
           
           <div className="space-y-4">
             <h3 className="font-medium flex items-center gap-2">
-              <CircleEllipsis className="h-4 w-4" /> In Progress
+              <CircleEllipsisIcon className="h-4 w-4" /> In Progress
             </h3>
             <div className="space-y-2">
               {tasks
@@ -199,7 +198,7 @@ export default function TaskList({
           
           <div className="space-y-4">
             <h3 className="font-medium flex items-center gap-2">
-              <CheckCircle className="h-4 w-4" /> Completed
+              <CheckCircle2Icon className="h-4 w-4" /> Completed
             </h3>
             <div className="space-y-2">
               {tasks

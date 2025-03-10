@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Search, Filter, X, Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -111,11 +110,31 @@ export default function TaskFilters({
   // Helper function to toggle a value in an array filter
   const toggleArrayFilter = (field: 'status' | 'priority' | 'assignee' | 'team', value: string) => {
     const currentValues = watch(field) || [];
-    const newValues = currentValues.includes(value)
-      ? currentValues.filter(v => v !== value)
-      : [...currentValues, value];
     
-    setValue(field, newValues);
+    if (field === 'status') {
+      const typedValue = value as TaskStatus;
+      const newValues = currentValues.includes(typedValue)
+        ? (currentValues as TaskStatus[]).filter(v => v !== typedValue)
+        : [...(currentValues as TaskStatus[]), typedValue];
+      
+      setValue('status', newValues);
+    } 
+    else if (field === 'priority') {
+      const typedValue = value as TaskPriority;
+      const newValues = currentValues.includes(typedValue)
+        ? (currentValues as TaskPriority[]).filter(v => v !== typedValue)
+        : [...(currentValues as TaskPriority[]), typedValue];
+      
+      setValue('priority', newValues);
+    }
+    else {
+      // For 'assignee' and 'team' which are string arrays
+      const newValues = currentValues.includes(value)
+        ? currentValues.filter(v => v !== value)
+        : [...currentValues, value];
+      
+      setValue(field, newValues);
+    }
   };
 
   return (

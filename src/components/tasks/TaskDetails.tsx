@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
-import { CalendarIcon, Clock, Edit2, Trash2, User, MessageSquare, Calendar, CheckCircle2, XCircle, Users } from 'lucide-react';
+import { CalendarIcon, Clock, Edit2, Trash2, User, MessageSquare, Calendar, CheckCircle2, XCircle, Users as UsersIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -210,7 +209,7 @@ export default function TaskDetails({
                       
                       {task.team && (
                         <div className="flex items-start gap-2">
-                          <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
+                          <UsersIcon className="h-5 w-5 text-muted-foreground mt-0.5" />
                           <div>
                             <p className="text-sm font-medium">Team</p>
                             <p className="text-sm">{task.team.name}</p>
@@ -221,7 +220,6 @@ export default function TaskDetails({
                   </CardContent>
                 </Card>
                 
-                {/* Subtasks section - placeholder for future implementation */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-base">Subtasks</CardTitle>

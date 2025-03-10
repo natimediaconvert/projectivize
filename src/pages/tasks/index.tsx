@@ -76,12 +76,12 @@ export default function TasksPage() {
 
       // Apply status filter
       if (filters.status && filters.status.length > 0) {
-        query = query.in('status', filters.status as TaskStatus[]);
+        query = query.in('status', filters.status);
       }
 
       // Apply priority filter
       if (filters.priority && filters.priority.length > 0) {
-        query = query.in('priority', filters.priority as TaskPriority[]);
+        query = query.in('priority', filters.priority);
       }
 
       // Apply assignee filter
@@ -179,16 +179,17 @@ export default function TasksPage() {
   });
 
   // Handle filter changes
-  const handleFilterChange = useCallback((newFilters: any) => {
+  const handleFilterChange = useCallback((newFilters: Partial<TaskFiltersType>) => {
     // Ensure we properly type-cast the incoming filters
-    setFilters({
-      search: newFilters.search || '',
-      status: (newFilters.status || []) as TaskStatus[],
-      priority: (newFilters.priority || []) as TaskPriority[],
-      assignee: newFilters.assignee || [],
-      team: newFilters.team || [],
-      dueDateRange: (newFilters.dueDateRange || 'all') as DateRange,
-    });
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      search: newFilters.search ?? prevFilters.search,
+      status: (newFilters.status as TaskStatus[]) ?? prevFilters.status,
+      priority: (newFilters.priority as TaskPriority[]) ?? prevFilters.priority,
+      assignee: newFilters.assignee ?? prevFilters.assignee,
+      team: newFilters.team ?? prevFilters.team,
+      dueDateRange: (newFilters.dueDateRange as DateRange) ?? prevFilters.dueDateRange,
+    }));
   }, []);
 
   // Handle task click to view details
