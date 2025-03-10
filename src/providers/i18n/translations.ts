@@ -47,8 +47,6 @@ export interface Translations {
   systemTheme: string;
   // Accessibility
   skipToContent: string;
-  // Search-related strings
-  searchPlaceholder: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -100,8 +98,6 @@ export const translations: Record<string, Translations> = {
     systemTheme: "System Theme",
     // Accessibility
     skipToContent: "Skip to content",
-    // Search-related strings
-    searchPlaceholder: "Search tasks, projects, users...",
   },
   he: {
     english: "אנגלית",
@@ -151,7 +147,5 @@ export const translations: Record<string, Translations> = {
     systemTheme: "ערכת נושא של המערכת",
     // Accessibility
     skipToContent: "דלג לתוכן",
-    // Search-related strings
-    searchPlaceholder: "חפש משימות, פרויקטים, משתמשים...",
   },
 };
