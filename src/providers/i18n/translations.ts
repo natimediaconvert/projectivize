@@ -1,150 +1,157 @@
+
 export interface Translations {
-  myDay: string;
+  english: string;
+  hebrew: string;
   dashboard: string;
+  myDay: string;
   tasks: string;
   projects: string;
   team: string;
   reports: string;
   goals: string;
   settings: string;
-  profile: string;
-  signOut: string;
+  // Auth-related strings
   signIn: string;
   signUp: string;
-  authDescription: string;
+  signOut: string;
   email: string;
   password: string;
   fullName: string;
-  signingIn: string;
-  createAccount: string;
-  creatingAccount: string;
+  welcomeBack: string;
+  error: string;
   signupSuccess: string;
   checkEmail: string;
-  error: string;
-  welcomeBack: string;
-  unauthorized: string;
-  goBackHome: string;
-  searchPlaceholder: string;
-  lightMode: string;
-  darkMode: string;
-  highContrastMode: string;
-  systemTheme: string;
-  skipToContent: string;
-  english: string;
-  hebrew: string;
+  profile: string;
+  updateProfile: string;
+  saveChanges: string;
+  cancel: string;
+  changeAvatar: string;
+  uploading: string;
+  fileTooLarge: string;
+  emailChangeInfo: string;
+  signingIn: string;
+  creatingAccount: string;
+  createAccount: string;
+  signedOut: string;
+  profileUpdated: string;
+  profileSettings: string;
+  authDescription: string;
   accessDenied: string;
   unauthorizedDescription: string;
   backToHome: string;
   goBack: string;
-  fileTooLarge: string;
-  profileSettings: string;
-  updateProfile: string;
-  changeAvatar: string;
-  emailChangeInfo: string;
-  cancel: string;
-  uploading: string;
-  saveChanges: string;
-  signedOut: string;
-  profileUpdated: string;
+  // Theme-related strings
+  lightMode: string;
+  darkMode: string;
+  highContrastMode: string;
+  systemTheme: string;
+  // Accessibility
+  skipToContent: string;
+  // Search-related strings
+  searchPlaceholder: string;
 }
 
-export const translations = {
+export const translations: Record<string, Translations> = {
   en: {
-    myDay: 'My Day',
-    dashboard: 'Dashboard',
-    tasks: 'Tasks',
-    projects: 'Projects',
-    team: 'Team',
-    reports: 'Reports',
-    goals: 'Goals',
-    settings: 'Settings',
-    profile: 'Profile',
-    signOut: 'Sign Out',
-    signIn: 'Sign In',
-    signUp: 'Sign Up',
-    authDescription: 'Sign in to continue.',
-    email: 'Email',
-    password: 'Password',
-    fullName: 'Full Name',
-    signingIn: 'Signing In...',
-    createAccount: 'Create Account',
-    creatingAccount: 'Creating Account...',
-    signupSuccess: 'Signup successful!',
-    checkEmail: 'Please check your email to confirm your account.',
-    error: 'Error',
-    welcomeBack: 'Welcome back!',
-    unauthorized: 'Unauthorized',
-    goBackHome: 'Go back home',
-    searchPlaceholder: 'Search tasks, projects, and goals...',
-    lightMode: 'Light Mode',
-    darkMode: 'Dark Mode',
-    highContrastMode: 'High Contrast',
-    systemTheme: 'System',
-    skipToContent: 'Skip to content',
-    english: 'English',
-    hebrew: 'Hebrew',
-    accessDenied: 'Access Denied',
-    unauthorizedDescription: 'You do not have permission to access this page.',
-    backToHome: 'Back to Home',
-    goBack: 'Go Back',
-    fileTooLarge: 'File is too large',
-    profileSettings: 'Profile Settings',
-    updateProfile: 'Update Profile',
-    changeAvatar: 'Change Avatar',
-    emailChangeInfo: 'Email change requires confirmation',
-    cancel: 'Cancel',
-    uploading: 'Uploading...',
-    saveChanges: 'Save Changes',
-    signedOut: 'Signed out successfully',
-    profileUpdated: 'Profile updated successfully',
+    english: "English",
+    hebrew: "Hebrew",
+    dashboard: "Dashboard",
+    myDay: "My Day",
+    tasks: "Tasks",
+    projects: "Projects",
+    team: "Team",
+    reports: "Reports",
+    goals: "Goals",
+    settings: "Settings",
+    // Auth-related strings
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    signOut: "Sign Out",
+    email: "Email",
+    password: "Password",
+    fullName: "Full Name",
+    welcomeBack: "Welcome back!",
+    error: "Error",
+    signupSuccess: "Account created successfully",
+    checkEmail: "Please check your email for confirmation",
+    profile: "Profile",
+    updateProfile: "Update your profile information",
+    saveChanges: "Save Changes",
+    cancel: "Cancel",
+    changeAvatar: "Change Avatar",
+    uploading: "Uploading...",
+    fileTooLarge: "File is too large (max 2MB)",
+    emailChangeInfo: "Contact support to change your email",
+    signingIn: "Signing in...",
+    creatingAccount: "Creating account...",
+    createAccount: "Create Account",
+    signedOut: "You have been signed out",
+    profileUpdated: "Profile updated successfully",
+    profileSettings: "Profile Settings",
+    authDescription: "Sign in to your account or create a new one",
+    accessDenied: "Access Denied",
+    unauthorizedDescription: "You don't have permission to access this page. Please contact your administrator if you believe this is an error.",
+    backToHome: "Back to Home",
+    goBack: "Go Back",
+    // Theme-related strings
+    lightMode: "Light Mode",
+    darkMode: "Dark Mode",
+    highContrastMode: "High Contrast Mode",
+    systemTheme: "System Theme",
+    // Accessibility
+    skipToContent: "Skip to content",
+    // Search-related strings
+    searchPlaceholder: "Search tasks, projects, users...",
   },
   he: {
-    myDay: 'היום שלי',
-    dashboard: 'לוח בקרה',
-    tasks: 'משימות',
-    projects: 'פרויקטים',
-    team: 'צוות',
-    reports: 'דוחות',
-    goals: 'מטרות',
-    settings: 'הגדרות',
-    profile: 'פרופיל',
-    signOut: 'התנתק',
-    signIn: 'התחבר',
-    signUp: 'הרשם',
-    authDescription: 'התחבר כדי להמשיך.',
-    email: 'דוא"ל',
-    password: 'סיסמה',
-    fullName: 'שם מלא',
-    signingIn: 'מתחבר...',
-    createAccount: 'צור חשבון',
-    creatingAccount: 'יוצר חשבון...',
-    signupSuccess: 'הרשמה בוצעה בהצלחה!',
-    checkEmail: 'אנא בדוק את הדוא"ל שלך כדי לאשר את החשבון.',
-    error: 'שגיאה',
-    welcomeBack: 'ברוך שובך!',
-    unauthorized: 'לא מורשה',
-    goBackHome: 'חזור הביתה',
-    searchPlaceholder: 'חיפוש משימות, פרוייקטים ויעדים...',
-    lightMode: 'מצב בהיר',
-    darkMode: 'מצב כהה',
-    highContrastMode: 'ניגודיות גבוהה',
-    systemTheme: 'מערכת',
-    skipToContent: 'דלג לתוכן',
-    english: 'אנגלית',
-    hebrew: 'עברית',
-    accessDenied: 'הגישה נדחתה',
-    unauthorizedDescription: 'אין לך הרשאה לגשת לדף זה.',
-    backToHome: 'חזרה לדף הבית',
-    goBack: 'חזור',
-    fileTooLarge: 'הקובץ גדול מדי',
-    profileSettings: 'הגדרות פרופיל',
-    updateProfile: 'עדכן פרופיל',
-    changeAvatar: 'שנה תמונת פרופיל',
-    emailChangeInfo: 'שינוי כתובת דואר אלקטרוני דורש אישור',
-    cancel: 'ביטול',
-    uploading: 'מעלה...',
-    saveChanges: 'שמור שינויים',
-    signedOut: 'התנתקת בהצלחה',
-    profileUpdated: 'הפרופיל עודכן בהצלחה',
-  }
+    english: "אנגלית",
+    hebrew: "עברית",
+    dashboard: "לוח בקרה",
+    myDay: "היום שלי",
+    tasks: "משימות",
+    projects: "פרויקטים",
+    team: "צוות",
+    reports: "דוחות",
+    goals: "יעדים",
+    settings: "הגדרות",
+    // Auth-related strings
+    signIn: "התחברות",
+    signUp: "הרשמה",
+    signOut: "התנתקות",
+    email: "אימייל",
+    password: "סיסמה",
+    fullName: "שם מלא",
+    welcomeBack: "ברוך שובך!",
+    error: "שגיאה",
+    signupSuccess: "החשבון נוצר בהצלחה",
+    checkEmail: "אנא בדוק את האימייל שלך לאישור",
+    profile: "פרופיל",
+    updateProfile: "עדכן את פרטי הפרופיל שלך",
+    saveChanges: "שמור שינויים",
+    cancel: "ביטול",
+    changeAvatar: "שנה תמונת פרופיל",
+    uploading: "מעלה...",
+    fileTooLarge: "הקובץ גדול מדי (מקסימום 2MB)",
+    emailChangeInfo: "צור קשר עם התמיכה כדי לשנות את האימייל שלך",
+    signingIn: "מתחבר...",
+    creatingAccount: "יוצר חשבון...",
+    createAccount: "צור חשבון",
+    signedOut: "התנתקת בהצלחה",
+    profileUpdated: "הפרופיל עודכן בהצלחה",
+    profileSettings: "הגדרות פרופיל",
+    authDescription: "התחבר לחשבון שלך או צור חשבון חדש",
+    accessDenied: "הגישה נדחתה",
+    unauthorizedDescription: "אין לך הרשאה לגשת לדף זה. אנא צור קשר עם המנהל שלך אם אתה מאמין שזו טעות.",
+    backToHome: "חזרה לדף הבית",
+    goBack: "חזור",
+    // Theme-related strings
+    lightMode: "מצב בהיר",
+    darkMode: "מצב כהה",
+    highContrastMode: "מצב ניגודיות גבוהה",
+    systemTheme: "ערכת נושא של המערכת",
+    // Accessibility
+    skipToContent: "דלג לתוכן",
+    // Search-related strings
+    searchPlaceholder: "חפש משימות, פרויקטים, משתמשים...",
+  },
 };
