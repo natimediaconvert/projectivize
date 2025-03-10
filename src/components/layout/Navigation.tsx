@@ -15,6 +15,7 @@ import { useTranslation } from "@/providers/i18n/TranslationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LanguageToggle } from "@/components/ui/language-toggle";
+import { UserAccountMenu } from "@/components/auth/UserAccountMenu";
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -38,9 +39,10 @@ export default function Navigation() {
       <SidebarContent>
         <div className="flex items-center justify-between p-6">
           <img src="/lovable-uploads/5777b715-f615-4046-b1b4-1af3cd0a1135.png" alt="Logo" className="h-8" />
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-2">
             <ThemeToggle />
             <LanguageToggle />
+            <UserAccountMenu />
           </div>
         </div>
         <SidebarGroup>
