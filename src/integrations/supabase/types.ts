@@ -9,7 +9,241 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      goals: {
+        Row: {
+          category: Database["public"]["Enums"]["goal_category"]
+          created_at: string | null
+          deadline: string | null
+          description: string | null
+          id: string
+          progress: number | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["goal_category"]
+          created_at?: string | null
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          progress?: number | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["goal_category"]
+          created_at?: string | null
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          progress?: number | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string
+          id: string
+          profile_picture: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          full_name: string
+          id: string
+          profile_picture?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string
+          id?: string
+          profile_picture?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          created_at: string | null
+          data: Json
+          date: string | null
+          generated_by: string
+          id: string
+          report_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          data?: Json
+          date?: string | null
+          generated_by: string
+          id?: string
+          report_type: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json
+          date?: string | null
+          generated_by?: string
+          id?: string
+          report_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_generated_by_fkey"
+            columns: ["generated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          assigned_to: string | null
+          created_at: string | null
+          created_by: string
+          description: string | null
+          due_date: string | null
+          id: string
+          priority: Database["public"]["Enums"]["task_priority"] | null
+          status: Database["public"]["Enums"]["task_status"] | null
+          team_id: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["task_priority"] | null
+          status?: Database["public"]["Enums"]["task_status"] | null
+          team_id?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["task_priority"] | null
+          status?: Database["public"]["Enums"]["task_status"] | null
+          team_id?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_members: {
+        Row: {
+          joined_at: string | null
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          joined_at?: string | null
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          joined_at?: string | null
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teams: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          team_lead: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          team_lead?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          team_lead?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teams_team_lead_fkey"
+            columns: ["team_lead"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +252,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      goal_category: "professional" | "project" | "personal"
+      task_priority: "low" | "medium" | "high" | "urgent"
+      task_status: "pending" | "in_progress" | "completed"
+      user_role: "employee" | "team_lead" | "manager"
     }
     CompositeTypes: {
       [_ in never]: never
