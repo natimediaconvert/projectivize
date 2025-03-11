@@ -35,7 +35,7 @@ const AuthCard: React.FC<AuthCardProps> = ({
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1 text-center">
         <div className="flex justify-center mb-6">
-          <img src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" alt="QualiTasks Logo" className="h-80 w-auto" />
+          <img src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" alt="QualiTasks Logo" className="h-144 w-auto" />
         </div>
         <CardDescription>{t('authDescription')}</CardDescription>
       </CardHeader>
