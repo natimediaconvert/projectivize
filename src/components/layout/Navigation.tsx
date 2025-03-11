@@ -39,7 +39,7 @@ export default function Navigation() {
       <SidebarContent className="pt-0">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-80px)] overflow-y-auto mt-20">
+            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-100px)] overflow-y-auto mt-28">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
