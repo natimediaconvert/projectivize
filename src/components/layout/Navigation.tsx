@@ -36,15 +36,15 @@ export default function Navigation() {
 
   return (
     <Sidebar variant="sidebar" className="bg-white border-r z-10">
-      <SidebarContent>
+      <SidebarContent className="pt-0">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2 p-3">
+            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-80px)] overflow-y-auto">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     onClick={() => handleNavigation(item.path)}
-                    className={`w-full flex items-center p-3 rounded-md ${
+                    className={`w-full flex items-center p-2 rounded-md ${
                       location.pathname === item.path ? "bg-blue-500 text-white" : "hover:bg-gray-100"
                     }`}
                   >
