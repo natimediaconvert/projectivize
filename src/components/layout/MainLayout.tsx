@@ -10,7 +10,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     <>
       <SkipLink />
       <SidebarProvider>
-        <div className="min-h-screen flex flex-col w-full bg-secondary/30">
+        <div className="min-h-screen flex flex-col w-full">
           <TopBar />
           <div className="flex flex-1">
             <Navigation />
