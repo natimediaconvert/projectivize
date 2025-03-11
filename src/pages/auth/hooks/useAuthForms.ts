@@ -60,8 +60,10 @@ export const useAuthForms = () => {
     e.preventDefault();
     setLoading(true);
     
+    let timeoutId: NodeJS.Timeout | null = null;
+    
     // Create a timeout to prevent infinite loading
-    const timeoutId = setTimeout(() => {
+    timeoutId = setTimeout(() => {
       console.error("Sign in timed out after 8 seconds");
       setLoading(false);
       toast({
@@ -79,7 +81,10 @@ export const useAuthForms = () => {
       });
 
       // Clear the timeout since we got a response
-      clearTimeout(timeoutId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
 
       if (error) throw error;
       
@@ -91,13 +96,19 @@ export const useAuthForms = () => {
         navigate('/', { replace: true });
       }
     } catch (error: any) {
-      // Clear the timeout
-      clearTimeout(timeoutId);
+      // Clear the timeout if it still exists
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
       
       console.error("Sign in error:", error.message);
       handleError(error.message);
     } finally {
-      clearTimeout(timeoutId); // Make sure timeout is cleared in all cases
+      // Make sure timeout is cleared in all cases
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
       setLoading(false);
     }
   };
