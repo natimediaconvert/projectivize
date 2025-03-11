@@ -18,13 +18,13 @@ export const useAuthState = () => {
       
       setLoading(true);
       
-      // Set a timeout to prevent infinite loading
+      // Set a shorter timeout to prevent long loading
       authTimeout = setTimeout(() => {
         if (mounted && loading) {
           console.warn('Auth initialization timed out');
           setLoading(false);
         }
-      }, 3000); // 3 second timeout
+      }, 1500); // Reduced from 3000ms to 1500ms
       
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
