@@ -24,7 +24,7 @@ export const useAuthState = () => {
           console.warn('Auth initialization timed out');
           setLoading(false);
         }
-      }, 15000); // Increase timeout to 15 seconds
+      }, 20000); // Increase timeout to 20 seconds
       
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -33,17 +33,24 @@ export const useAuthState = () => {
           console.error('Error getting session:', error.message);
           if (mounted) {
             setLoading(false);
+            clearTimeout(authTimeout);
           }
           return;
         }
         
         if (session?.user && mounted) {
+          console.log('Session found during initialization');
           setUser(session.user);
           await fetchUserProfile(session.user.id);
-        } 
+          clearTimeout(authTimeout);
+          setLoading(false);
+        } else if (mounted) {
+          console.log('No session found during initialization');
+          setLoading(false);
+          clearTimeout(authTimeout);
+        }
       } catch (error) {
         console.error('Error initializing auth:', error);
-      } finally {
         if (mounted) {
           setLoading(false);
           clearTimeout(authTimeout);
@@ -59,20 +66,22 @@ export const useAuthState = () => {
         
         if (!mounted) return;
         
-        // Clear the timeout to prevent race conditions
+        // Always clear the timeout on any auth state change
         clearTimeout(authTimeout);
         
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session?.user) {
+            console.log('User signed in or token refreshed:', session.user.id);
             setUser(session.user);
             await fetchUserProfile(session.user.id);
           }
         } else if (event === 'SIGNED_OUT') {
+          console.log('User signed out');
           setUser(null);
           setProfile(null);
         }
         
-        // Set loading to false after processing the auth state change
+        // Always set loading to false after processing the auth state change
         setLoading(false);
       }
     );
