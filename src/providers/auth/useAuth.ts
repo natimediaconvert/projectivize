@@ -24,7 +24,7 @@ export const useAuthState = () => {
           console.warn('Auth initialization timed out');
           setLoading(false);
         }
-      }, 20000); // 20 second timeout
+      }, 5000); // 5 second timeout
       
       try {
         const { data: { session }, error } = await supabase.auth.getSession();

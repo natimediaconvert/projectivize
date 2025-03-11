@@ -47,11 +47,24 @@ export const useSessionCheck = () => {
         console.log("Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 3000); // Reducing timeout to 3 seconds for better UX
+    }, 2000); // Reducing timeout to 2 seconds for better UX
+    
+    // Listen for auth state changes
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!isMounted) return;
+      
+      console.log("Auth page: Auth state changed:", event);
+      
+      if (event === 'SIGNED_IN' && session) {
+        console.log("Auth page: User signed in, redirecting to home");
+        navigate('/', { replace: true });
+      }
+    });
     
     return () => {
       isMounted = false;
       clearTimeout(safetyTimeoutId);
+      data.subscription.unsubscribe();
     };
   }, [navigate]);
 

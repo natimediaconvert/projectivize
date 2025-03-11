@@ -63,24 +63,21 @@ export const useAuthForms = () => {
     try {
       console.log("Attempting to sign in with email:", email);
       
-      // Add a direct sign-in approach without additional complexity
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // Sign in with no extra complexity
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
       if (error) throw error;
       
-      if (data.user) {
-        console.log("Sign in successful, navigating to home");
-        toast({
-          title: t('welcomeBack'),
-        });
-        // Force a short delay before navigation to ensure state is updated
-        setTimeout(() => {
-          navigate('/', { replace: true });
-        }, 100);
-      }
+      // On successful sign-in, just show a toast - navigation will be handled by the auth state change
+      toast({
+        title: t('welcomeBack'),
+      });
+      
+      // We don't call navigate here anymore - let the auth state change listener handle it
+      
     } catch (error: any) {
       console.error("Sign in error:", error.message);
       handleError(error.message);
