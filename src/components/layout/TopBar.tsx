@@ -20,12 +20,13 @@ const TopBar = (): JSX.Element => {
         <img 
           src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" 
           alt="QualiTasks Logo" 
-          className="h-16 w-auto"
+          className="h-20 w-auto"
           style={{ 
             position: 'absolute',
             left: '0',
             top: '50%',
-            transform: 'translateY(-50%)'
+            transform: 'translateY(-50%) scale(1.5)',
+            transformOrigin: 'left center'
           }}
         />
       </div>
