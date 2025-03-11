@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import AuthContext from './AuthContext';
 import { useAuthState } from './useAuth';
@@ -26,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading: methodsLoading 
   } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile, updateUserProfile });
 
-  // Keep loading state simple - only consider auth loading during initial auth check
+  // Only consider auth as loading during initial check
   const loading = stateLoading;
 
   const value = {
@@ -37,6 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signOut,
     loading,
     updateProfile,
+    authInitialized,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

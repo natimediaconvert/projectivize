@@ -20,4 +20,5 @@ export interface AuthContextType {
   signOut: () => Promise<void>;
   loading: boolean;
   updateProfile: (updates: Partial<Omit<UserProfile, 'role'>> & { role?: DBRole }) => Promise<void>;
+  authInitialized: boolean;
 }

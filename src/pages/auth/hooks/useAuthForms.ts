@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
+import { useNavigate } from 'react-router-dom';
 
 export const useAuthForms = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ export const useAuthForms = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   // Helper function to reset the loading state and show an error message
   const handleError = (message: string) => {
@@ -45,6 +47,15 @@ export const useAuthForms = () => {
           title: t('signupSuccess'),
           description: t('checkEmail'),
         });
+        
+        // If sign up was successful and no email confirmation is required, redirect to home
+        if (!data.session) {
+          setLoading(false);
+          return;
+        }
+        
+        // If we have a session immediately, redirect to home
+        navigate('/', { replace: true });
       }
     } catch (error: any) {
       console.error("Sign up error:", error.message);
@@ -61,34 +72,27 @@ export const useAuthForms = () => {
     try {
       console.log("Attempting to sign in with email:", email);
       
-      // Set up abort controller for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
-      clearTimeout(timeoutId);
-      
       if (error) throw error;
       
-      console.log("Sign in successful via useAuthForms");
+      console.log("Sign in successful, redirecting to home");
       
       toast({
         title: t('welcomeBack'),
       });
       
-      // Note: Navigation is handled by the auth state change listener in useSessionCheck
+      // Redirect immediately after successful sign in
+      if (data.session) {
+        navigate('/', { replace: true });
+      }
       
     } catch (error: any) {
-      if (error.name === 'AbortError') {
-        handleError('Sign in request timed out. Please try again.');
-      } else {
-        console.error("Sign in error:", error.message);
-        handleError(error.message);
-      }
+      console.error("Sign in error:", error.message);
+      handleError(error.message);
     } finally {
       setLoading(false);
     }
