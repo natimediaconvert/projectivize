@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -24,7 +23,7 @@ export const useAuthMethods = (
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<void> => {
     try {
       console.log('[DEBUG] Starting sign in process with:', email);
       setLoading(true);
@@ -47,10 +46,7 @@ export const useAuthMethods = (
         toast({
           title: t('welcomeBack'),
         });
-        return { user: data.user };
       }
-      
-      return { user: null };
     } catch (error: any) {
       console.error('[DEBUG] Error in signIn method:', error.message);
       toast({
@@ -64,7 +60,7 @@ export const useAuthMethods = (
     }
   };
 
-  const signUp = async (email: string, password: string, fullName: string) => {
+  const signUp = async (email: string, password: string, fullName: string): Promise<void> => {
     try {
       console.log('[DEBUG] Starting sign up process with:', email);
       setLoading(true);
@@ -90,8 +86,6 @@ export const useAuthMethods = (
         title: t('signupSuccess'),
         description: t('checkEmail'),
       });
-      
-      return { user: data.user };
     } catch (error: any) {
       console.error('[DEBUG] Error in signUp method:', error.message);
       toast({
