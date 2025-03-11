@@ -60,32 +60,38 @@ export const useAuthForms = () => {
     e.preventDefault();
     setLoading(true);
     
-    let timeoutId: NodeJS.Timeout | null = null;
-    
-    // Create a timeout to prevent infinite loading
-    timeoutId = setTimeout(() => {
-      console.error("Sign in timed out after 8 seconds");
-      setLoading(false);
-      toast({
-        title: t('error'),
-        description: t('signInTimeout'),
-        variant: 'destructive',
-      });
-    }, 8000); // 8 second timeout
+    // Declare the timeout variable
+    let timeoutId: NodeJS.Timeout | undefined = undefined;
     
     try {
-      console.log("Attempting to sign in with email:", email);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      // Set a timeout for the sign-in process
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error("Sign in request timed out. Please try again."));
+        }, 8000);
       });
-
-      // Clear the timeout since we got a response
+      
+      console.log("Attempting to sign in with email:", email);
+      
+      // Race between the sign-in process and the timeout
+      const result = await Promise.race([
+        supabase.auth.signInWithPassword({
+          email,
+          password,
+        }),
+        timeoutPromise
+      ]);
+      
+      // If we got here, the sign-in completed before timeout
+      // Clear the timeout
       if (timeoutId) {
         clearTimeout(timeoutId);
-        timeoutId = null;
+        timeoutId = undefined;
       }
-
+      
+      // Now process the result
+      const { data, error } = result as Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>;
+      
       if (error) throw error;
       
       if (data.user) {
@@ -96,16 +102,15 @@ export const useAuthForms = () => {
         navigate('/', { replace: true });
       }
     } catch (error: any) {
-      // Clear the timeout if it still exists
+      // Clear the timeout if it exists
       if (timeoutId) {
         clearTimeout(timeoutId);
-        timeoutId = null;
       }
       
       console.error("Sign in error:", error.message);
       handleError(error.message);
     } finally {
-      // Make sure timeout is cleared in all cases
+      // Just to be extra safe, clear the timeout again
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
