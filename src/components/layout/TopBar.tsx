@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,10 +20,12 @@ const TopBar = (): JSX.Element => {
         <img 
           src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" 
           alt="QualiTasks Logo" 
-          className="h-[64px] w-auto absolute left-0 top-1/2 transform -translate-y-1/2" 
+          className="h-16 w-auto"
           style={{ 
-            transform: 'translateY(-40%) scale(4)',
-            transformOrigin: 'left center'
+            position: 'absolute',
+            left: '0',
+            top: '50%',
+            transform: 'translateY(-50%)'
           }}
         />
       </div>
