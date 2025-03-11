@@ -13,9 +13,15 @@ export const useSessionCheck = () => {
     const checkUser = async () => {
       try {
         console.log("Auth page: Checking session...");
-        const { data } = await supabase.auth.getSession();
+        const { data, error } = await supabase.auth.getSession();
         
         if (!isMounted) return;
+        
+        if (error) {
+          console.error("Auth page: Error checking session:", error.message);
+          setCheckingSession(false);
+          return;
+        }
         
         if (data.session) {
           console.log("Auth page: User has active session, redirecting to home");
@@ -24,7 +30,7 @@ export const useSessionCheck = () => {
           console.log("Auth page: No active session found");
           setCheckingSession(false);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error checking session:', error);
         if (isMounted) {
           setCheckingSession(false);
@@ -32,11 +38,8 @@ export const useSessionCheck = () => {
       }
     };
     
-    // Check session immediately, but use a very short timeout 
-    // to ensure the component is mounted
-    const timeoutId = setTimeout(() => {
-      checkUser();
-    }, 50);
+    // Check session immediately
+    checkUser();
     
     // Add a safety timeout to prevent indefinite loading
     const safetyTimeoutId = setTimeout(() => {
@@ -44,11 +47,10 @@ export const useSessionCheck = () => {
         console.log("Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 2000); // 2 second safety timeout
+    }, 1500); // 1.5 second safety timeout - make it even shorter
     
     return () => {
       isMounted = false;
-      clearTimeout(timeoutId);
       clearTimeout(safetyTimeoutId);
     };
   }, [navigate]);

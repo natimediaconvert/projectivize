@@ -54,12 +54,28 @@ export const useAuthForms = () => {
     e.preventDefault();
     setLoading(true);
     
+    // Add a timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (loading) {
+        console.error("Sign in timed out after 10 seconds");
+        setLoading(false);
+        toast({
+          title: t('error'),
+          description: t('signInTimeout'),
+          variant: 'destructive',
+        });
+      }
+    }, 10000); // 10 second timeout
+    
     try {
       console.log("Attempting to sign in with email:", email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
+
+      // Clear the timeout since we got a response
+      clearTimeout(timeoutId);
 
       if (error) throw error;
       
@@ -71,6 +87,9 @@ export const useAuthForms = () => {
         navigate('/', { replace: true });
       }
     } catch (error: any) {
+      // Clear the timeout
+      clearTimeout(timeoutId);
+      
       console.error("Sign in error:", error.message);
       toast({
         title: t('error'),
@@ -78,6 +97,8 @@ export const useAuthForms = () => {
         variant: 'destructive',
       });
     } finally {
+      // Clear the timeout to be safe
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };
