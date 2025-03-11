@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
+import { Loader2 } from 'lucide-react';
 
 interface SignInFormProps {
   email: string;
@@ -37,6 +38,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
           />
         </div>
         <div className="space-y-2">
@@ -49,12 +51,20 @@ const SignInForm: React.FC<SignInFormProps> = ({
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
           />
         </div>
       </CardContent>
       <CardFooter>
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? t('signingIn') : t('signIn')}
+          {loading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              {t('signingIn')}
+            </>
+          ) : (
+            t('signIn')
+          )}
         </Button>
       </CardFooter>
     </form>

@@ -19,6 +19,7 @@ export const useAuthForms = () => {
     setLoading(true);
     
     try {
+      console.log("Attempting to sign up with email:", email);
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -38,6 +39,7 @@ export const useAuthForms = () => {
         });
       }
     } catch (error: any) {
+      console.error("Sign up error:", error.message);
       toast({
         title: t('error'),
         description: error.message,
@@ -53,6 +55,7 @@ export const useAuthForms = () => {
     setLoading(true);
     
     try {
+      console.log("Attempting to sign in with email:", email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -64,9 +67,11 @@ export const useAuthForms = () => {
         toast({
           title: t('welcomeBack'),
         });
+        console.log("Sign in successful, navigating to home");
         navigate('/', { replace: true });
       }
     } catch (error: any) {
+      console.error("Sign in error:", error.message);
       toast({
         title: t('error'),
         description: error.message,
