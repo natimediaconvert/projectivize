@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,16 +6,24 @@ import { LanguageToggle } from '@/components/ui/language-toggle';
 import { UserAccountMenu } from '@/components/auth/UserAccountMenu';
 import { useTheme } from '@/providers/ThemeProvider';
 
-const TopBar = () => {
+/**
+ * TopBar component that displays the main navigation bar at the top of the application
+ * Includes the logo, notification bell, theme toggle, language toggle, and user account menu
+ */
+const TopBar = (): JSX.Element => {
   const { direction } = useTheme();
   
   return (
-    <div className="h-20 border-b bg-[#1EAEDB] text-white backdrop-blur supports-[backdrop-filter]:bg-[#1EAEDB]/95 flex items-center justify-between px-6 sticky top-0 z-50">
-      <div className="flex items-center h-full pl-2">
+    <div className="h-20 border-b bg-[#1EAEDB] text-white backdrop-blur supports-[backdrop-filter]:bg-[#1EAEDB]/95 flex items-center justify-between px-6 sticky top-0 z-50 overflow-visible">
+      <div className="flex items-center h-full relative" style={{ minWidth: '250px' }}>
         <img 
           src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" 
           alt="QualiTasks Logo" 
-          className="h-16 w-auto my-auto" 
+          className="h-[64px] w-auto absolute left-0 top-1/2 transform -translate-y-1/2" 
+          style={{ 
+            transform: 'translateY(-40%) scale(4)',
+            transformOrigin: 'left center'
+          }}
         />
       </div>
       
