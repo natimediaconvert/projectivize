@@ -26,13 +26,20 @@ export const useAuthMethods = (
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log('[DEBUG] Starting sign in process with:', email);
       setLoading(true);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('[DEBUG] Sign in error from Supabase:', error.message);
+        throw error;
+      }
+      
+      console.log('[DEBUG] Sign in successful, user data received:', !!data.user);
       
       if (data.user) {
         setUser(data.user);
@@ -40,8 +47,12 @@ export const useAuthMethods = (
         toast({
           title: t('welcomeBack'),
         });
+        return { user: data.user };
       }
+      
+      return { user: null };
     } catch (error: any) {
+      console.error('[DEBUG] Error in signIn method:', error.message);
       toast({
         title: t('error'),
         description: error.message,
@@ -55,7 +66,9 @@ export const useAuthMethods = (
 
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
+      console.log('[DEBUG] Starting sign up process with:', email);
       setLoading(true);
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -66,14 +79,21 @@ export const useAuthMethods = (
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('[DEBUG] Sign up error from Supabase:', error.message);
+        throw error;
+      }
+      
+      console.log('[DEBUG] Sign up successful, confirmation email sent');
       
       toast({
         title: t('signupSuccess'),
         description: t('checkEmail'),
       });
       
+      return { user: data.user };
     } catch (error: any) {
+      console.error('[DEBUG] Error in signUp method:', error.message);
       toast({
         title: t('error'),
         description: error.message,
@@ -87,9 +107,9 @@ export const useAuthMethods = (
 
   const signOut = async () => {
     try {
-      console.log('Signing out...');
+      console.log('[DEBUG] Starting sign out process...');
       
-      // First clear local state immediately
+      // First clear local state immediately for better UX
       setUser(null);
       setProfile(null);
       
@@ -99,17 +119,17 @@ export const useAuthMethods = (
       // Then sign out from Supabase in the background
       const { error } = await supabase.auth.signOut();
       if (error) {
-        console.error('Sign out error:', error);
+        console.error('[DEBUG] Sign out error from Supabase:', error.message);
         throw error;
       }
       
-      console.log('Sign out successful, user state cleared');
+      console.log('[DEBUG] Sign out successful, user state cleared');
       
       toast({
         title: t('signedOut'),
       });
     } catch (error: any) {
-      console.error('Sign out error:', error);
+      console.error('[DEBUG] Error in signOut method:', error.message);
       toast({
         title: t('error'),
         description: error.message,

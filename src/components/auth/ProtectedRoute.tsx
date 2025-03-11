@@ -17,19 +17,30 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRoles = []
 }) => {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, authInitialized } = useAuth();
   const location = useLocation();
   const [showRetry, setShowRetry] = useState(false);
   
-  // Set a timeout to show retry button if loading takes too long
+  // Log protected route state
+  useEffect(() => {
+    console.log('[DEBUG] ProtectedRoute state:', 
+      'path:', location.pathname,
+      'loading:', loading, 
+      'authInitialized:', authInitialized,
+      'user:', user ? 'logged in' : 'not logged in'
+    );
+  }, [location.pathname, loading, authInitialized, user]);
+  
+  // Set a faster timeout to show retry button if loading takes too long
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     
     if (loading) {
-      // Show retry after 5 seconds of loading
+      // Show retry after 3 seconds of loading (reduced from 5)
       timeoutId = setTimeout(() => {
+        console.log('[DEBUG] ProtectedRoute showing retry button after timeout');
         setShowRetry(true);
-      }, 5000);
+      }, 3000);
     } else {
       setShowRetry(false);
     }
@@ -41,11 +52,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Handle retry button click
   const handleRetry = () => {
+    console.log('[DEBUG] ProtectedRoute retry button clicked, reloading page');
     window.location.reload();
   };
 
   // If still loading auth state, show loading indicator
-  if (loading) {
+  if (loading || !authInitialized) {
+    console.log('[DEBUG] ProtectedRoute showing loading state');
     return (
       <div className="flex flex-col justify-center items-center h-screen">
         <div className="w-full max-w-md space-y-4 p-8">
@@ -79,7 +92,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // If not authenticated, redirect to login immediately
   if (!user) {
-    console.log("User not authenticated, redirecting to auth page");
+    console.log("[DEBUG] User not authenticated, redirecting to auth page");
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
@@ -94,5 +107,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // User is authenticated and has required role if specified
+  console.log('[DEBUG] ProtectedRoute - authentication successful, rendering children');
   return <>{children}</>;
 };

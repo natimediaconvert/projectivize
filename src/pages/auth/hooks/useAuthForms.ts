@@ -30,27 +30,16 @@ export const useAuthForms = () => {
     
     try {
       const startTime = Date.now();
-      const result = await signIn({ email, password });
+      const result = await signIn(email, password);
       const duration = Date.now() - startTime;
       
-      if (result.error) {
-        console.error('[DEBUG] Sign in error:', result.error.message);
-        toast({
-          variant: 'destructive',
-          title: 'Error signing in',
-          description: result.error.message
-        });
-      } else {
-        console.log(`[DEBUG] Sign in successful after ${duration}ms, user:`, result.user?.email);
-        toast({
-          title: 'Welcome back!',
-          description: 'Signed in successfully'
-        });
-        
-        // Add a small timeout to ensure Supabase has time to process the authentication
-        console.log('[DEBUG] Redirecting to dashboard after sign in');
-        navigate('/', { replace: true });
-      }
+      console.log(`[DEBUG] Sign in completed after ${duration}ms, redirecting to dashboard`);
+      toast({
+        title: 'Welcome back!',
+        description: 'Signed in successfully'
+      });
+      
+      navigate('/', { replace: true });
     } catch (error: any) {
       console.error('[DEBUG] Unexpected sign in error:', error);
       toast({
@@ -79,30 +68,13 @@ export const useAuthForms = () => {
     console.log('[DEBUG] Attempting to sign up with email:', email);
     
     try {
-      const result = await signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          }
-        }
-      });
+      await signUp(email, password, fullName);
       
-      if (result.error) {
-        console.error('[DEBUG] Sign up error:', result.error.message);
-        toast({
-          variant: 'destructive',
-          title: 'Error signing up',
-          description: result.error.message
-        });
-      } else {
-        console.log('[DEBUG] Sign up successful');
-        toast({
-          title: 'Account created',
-          description: 'Please check your email to confirm your account'
-        });
-      }
+      console.log('[DEBUG] Sign up successful');
+      toast({
+        title: 'Account created',
+        description: 'Please check your email to confirm your account'
+      });
     } catch (error: any) {
       console.error('[DEBUG] Unexpected sign up error:', error);
       toast({

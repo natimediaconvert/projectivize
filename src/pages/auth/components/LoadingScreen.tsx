@@ -6,31 +6,57 @@ import { Progress } from '@/components/ui/progress';
 
 const LoadingScreen: React.FC = () => {
   const { t } = useTranslation();
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(10);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
-  // Simulate progress to give user visual feedback while waiting
+  // Use a faster progress simulation
   useEffect(() => {
+    let unmounted = false;
+    
+    // Preload the logo to avoid flashing
+    const logoImg = new Image();
+    logoImg.src = "/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png";
+    logoImg.onload = () => {
+      if (!unmounted) {
+        console.log("[DEBUG] Auth page: Logo loaded in loading screen");
+        setImgLoaded(true);
+        setProgress(30); // Jump to 30% when logo is loaded
+      }
+    };
+    
+    // Faster progress updates for better UX
     const interval = setInterval(() => {
+      if (unmounted) return;
+      
       setProgress((prev) => {
         if (prev >= 90) {
           clearInterval(interval);
           return 90;
         }
-        return prev + 10;
+        return prev + 15; // Faster increments
       });
-    }, 100);
+    }, 70); // Faster interval
 
-    return () => clearInterval(interval);
+    return () => {
+      unmounted = true;
+      clearInterval(interval);
+    };
   }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center max-w-md w-full px-4">
-        <img 
-          src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" 
-          alt="QualiTasks Logo" 
-          className="h-24 w-auto mx-auto mb-8" 
-        />
+      <div className="text-center max-w-md w-full px-4 animate-fade-in">
+        {imgLoaded ? (
+          <img 
+            src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" 
+            alt="QualiTasks Logo" 
+            className="h-24 w-auto mx-auto mb-8" 
+          />
+        ) : (
+          <div className="h-24 w-auto mx-auto mb-8 flex items-center justify-center">
+            <Loader2 className="h-10 w-10 animate-spin" />
+          </div>
+        )}
         <Progress value={progress} className="h-2 mb-4" />
         <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
         <p className="text-lg font-medium">{t('checkingSession')}</p>

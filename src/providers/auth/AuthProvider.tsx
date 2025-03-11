@@ -30,6 +30,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Only consider auth as loading during initial check
   const loading = stateLoading;
 
+  // Add some debug info
+  useEffect(() => {
+    console.log('[DEBUG] AuthProvider state updated:', 
+      'loading:', loading, 
+      'authInitialized:', authInitialized, 
+      'user:', user ? 'present' : 'null'
+    );
+  }, [loading, authInitialized, user]);
+
   const value = {
     user,
     profile,
