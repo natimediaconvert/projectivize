@@ -56,12 +56,17 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </div>
       </CardContent>
       <CardFooter>
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button 
+          type="submit" 
+          className="w-full" 
+          disabled={loading}
+          aria-live="polite"
+        >
           {loading ? (
-            <>
+            <span className="flex items-center justify-center">
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
               {t('signingIn')}
-            </>
+            </span>
           ) : (
             t('signIn')
           )}

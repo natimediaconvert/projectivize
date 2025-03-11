@@ -63,7 +63,7 @@ export const useAuthForms = () => {
     try {
       console.log("Attempting to sign in with email:", email);
       
-      // Simpler approach: just use the promise directly with a timeout
+      // Add a direct sign-in approach without additional complexity
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -76,7 +76,10 @@ export const useAuthForms = () => {
         toast({
           title: t('welcomeBack'),
         });
-        navigate('/', { replace: true });
+        // Force a short delay before navigation to ensure state is updated
+        setTimeout(() => {
+          navigate('/', { replace: true });
+        }, 100);
       }
     } catch (error: any) {
       console.error("Sign in error:", error.message);
