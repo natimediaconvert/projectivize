@@ -39,12 +39,12 @@ export default function Navigation() {
       <SidebarContent className="pt-0">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-80px)] overflow-y-auto">
+            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-80px)] overflow-y-auto mt-20">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     onClick={() => handleNavigation(item.path)}
-                    className={`w-full flex items-center p-2 rounded-md ${
+                    className={`w-full flex items-center p-3 rounded-md ${
                       location.pathname === item.path ? "bg-blue-500 text-white" : "hover:bg-gray-100"
                     }`}
                   >
