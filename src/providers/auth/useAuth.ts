@@ -24,7 +24,7 @@ export const useAuthState = () => {
           console.warn('Auth initialization timed out');
           setLoading(false);
         }
-      }, 10000); // Increase timeout to 10 seconds
+      }, 15000); // Increase timeout to 15 seconds
       
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -58,6 +58,9 @@ export const useAuthState = () => {
         console.log('Auth state changed:', event);
         
         if (!mounted) return;
+        
+        // Clear the timeout to prevent race conditions
+        clearTimeout(authTimeout);
         
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session?.user) {

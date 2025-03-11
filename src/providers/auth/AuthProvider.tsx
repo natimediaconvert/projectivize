@@ -14,6 +14,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Mark auth as initialized once the useAuthState has completed its initial check
     if (!stateLoading && !authInitialized) {
+      console.log('Auth initialized');
       setAuthInitialized(true);
     }
   }, [stateLoading, authInitialized]);
