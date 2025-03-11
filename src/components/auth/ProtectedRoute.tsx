@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
@@ -19,21 +20,31 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { user, profile, loading } = useAuth();
   const location = useLocation();
   const [showRetry, setShowRetry] = useState(false);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   // Set a timeout to show retry button if loading takes too long
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
+    let loadingTimeoutId: NodeJS.Timeout;
     
     if (loading) {
+      // Show retry after 5 seconds of loading
       timeoutId = setTimeout(() => {
         setShowRetry(true);
-      }, 8000); // Show retry after 8 seconds of loading
+      }, 5000);
+      
+      // Force navigation after 8 seconds regardless of loading state
+      loadingTimeoutId = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 8000);
     } else {
       setShowRetry(false);
+      setLoadingTimeout(false);
     }
     
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
+      if (loadingTimeoutId) clearTimeout(loadingTimeoutId);
     };
   }, [loading]);
 
@@ -42,8 +53,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     window.location.reload();
   };
 
-  // If still loading auth state, show loading indicator
-  if (loading) {
+  // Force redirection if loading takes too long
+  if (loadingTimeout) {
+    console.log("Loading timeout reached, forcing navigation to auth page");
+    return <Navigate to="/auth" state={{ from: location }} replace />;
+  }
+
+  // If still loading auth state and it hasn't timed out yet, show loading indicator
+  if (loading && !loadingTimeout) {
     return (
       <div className="flex flex-col justify-center items-center h-screen">
         <div className="w-full max-w-md space-y-4 p-8">
@@ -75,8 +92,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // If not authenticated, redirect to login
+  // If not authenticated, redirect to login immediately
   if (!user) {
+    console.log("User not authenticated, redirecting to auth page");
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 

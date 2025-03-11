@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from '@/providers/AuthProvider';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { TranslationProvider } from '@/providers/i18n/TranslationProvider';
@@ -49,7 +49,8 @@ const App = () => (
                 <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
                 <Route path="/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                
+                {/* Fallback route - redirect to auth if not logged in, otherwise 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </TooltipProvider>
