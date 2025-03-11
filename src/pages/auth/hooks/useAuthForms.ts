@@ -14,6 +14,16 @@ export const useAuthForms = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
 
+  // Helper function to reset the loading state and show an error message
+  const handleError = (message: string) => {
+    setLoading(false);
+    toast({
+      title: t('error'),
+      description: message,
+      variant: 'destructive',
+    });
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -40,11 +50,7 @@ export const useAuthForms = () => {
       }
     } catch (error: any) {
       console.error("Sign up error:", error.message);
-      toast({
-        title: t('error'),
-        description: error.message,
-        variant: 'destructive',
-      });
+      handleError(error.message);
     } finally {
       setLoading(false);
     }
@@ -54,18 +60,16 @@ export const useAuthForms = () => {
     e.preventDefault();
     setLoading(true);
     
-    // Add a timeout to prevent infinite loading
+    // Create a timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
-      if (loading) {
-        console.error("Sign in timed out after 10 seconds");
-        setLoading(false);
-        toast({
-          title: t('error'),
-          description: t('signInTimeout'),
-          variant: 'destructive',
-        });
-      }
-    }, 10000); // 10 second timeout
+      console.error("Sign in timed out after 8 seconds");
+      setLoading(false);
+      toast({
+        title: t('error'),
+        description: t('signInTimeout'),
+        variant: 'destructive',
+      });
+    }, 8000); // 8 second timeout
     
     try {
       console.log("Attempting to sign in with email:", email);
@@ -80,10 +84,10 @@ export const useAuthForms = () => {
       if (error) throw error;
       
       if (data.user) {
+        console.log("Sign in successful, navigating to home");
         toast({
           title: t('welcomeBack'),
         });
-        console.log("Sign in successful, navigating to home");
         navigate('/', { replace: true });
       }
     } catch (error: any) {
@@ -91,14 +95,9 @@ export const useAuthForms = () => {
       clearTimeout(timeoutId);
       
       console.error("Sign in error:", error.message);
-      toast({
-        title: t('error'),
-        description: error.message,
-        variant: 'destructive',
-      });
+      handleError(error.message);
     } finally {
-      // Clear the timeout to be safe
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId); // Make sure timeout is cleared in all cases
       setLoading(false);
     }
   };

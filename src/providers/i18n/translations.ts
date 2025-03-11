@@ -47,6 +47,8 @@ export interface Translations {
   // Accessibility
   skipToContent: string;
   checkingSession: string;
+  // Error messages
+  signInTimeout: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -99,6 +101,8 @@ export const translations: Record<string, Translations> = {
     // Accessibility
     skipToContent: "Skip to content",
     checkingSession: "Checking session...",
+    // Error messages
+    signInTimeout: "Sign in request timed out. Please try again.",
   },
   he: {
     english: "אנגלית",
@@ -149,5 +153,7 @@ export const translations: Record<string, Translations> = {
     // Accessibility
     skipToContent: "דלג לתוכן",
     checkingSession: "בודק סשן...",
+    // Error messages
+    signInTimeout: "בקשת ההתחברות פג זמנה. אנא נסה שוב.",
   },
 };
