@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSessionCheck } from './hooks/useSessionCheck';
 import { useAuthForms } from './hooks/useAuthForms';
 import AuthCard from './components/AuthCard';
@@ -18,6 +18,11 @@ export default function AuthPage() {
     handleSignUp,
     handleSignIn
   } = useAuthForms();
+
+  useEffect(() => {
+    // Log when the auth page renders and its loading state
+    console.log("Auth page rendered, checkingSession:", checkingSession);
+  }, [checkingSession]);
 
   if (checkingSession) {
     return <LoadingScreen />;

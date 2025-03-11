@@ -22,25 +22,34 @@ export const useSessionCheck = () => {
           navigate('/', { replace: true });
         } else {
           console.log("Auth page: No active session found");
+          setCheckingSession(false);
         }
       } catch (error) {
         console.error('Error checking session:', error);
-      } finally {
         if (isMounted) {
-          console.log("Auth page: Session check complete");
           setCheckingSession(false);
         }
       }
     };
     
-    // Add a short timeout to allow state to settle
+    // Check session immediately, but use a very short timeout 
+    // to ensure the component is mounted
     const timeoutId = setTimeout(() => {
       checkUser();
-    }, 100);
+    }, 50);
+    
+    // Add a safety timeout to prevent indefinite loading
+    const safetyTimeoutId = setTimeout(() => {
+      if (isMounted && checkingSession) {
+        console.log("Auth page: Safety timeout triggered - forcing completion of session check");
+        setCheckingSession(false);
+      }
+    }, 3000); // 3 second safety timeout
     
     return () => {
       isMounted = false;
       clearTimeout(timeoutId);
+      clearTimeout(safetyTimeoutId);
     };
   }, [navigate]);
 
