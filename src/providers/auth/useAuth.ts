@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProfile } from './useProfile';
 import { User } from './types';
@@ -8,7 +8,8 @@ export const useAuthState = () => {
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
   const { profile, setProfile, fetchUserProfile } = useProfile();
-
+  const authInitializedRef = useRef(false);
+  
   useEffect(() => {
     let mounted = true;
     let authTimeout: NodeJS.Timeout;
@@ -18,15 +19,14 @@ export const useAuthState = () => {
       
       const startTime = Date.now();
       console.log('[DEBUG] Starting auth initialization at:', new Date().toISOString());
-      setLoading(true);
       
-      // Set a shorter timeout to prevent long loading
+      // Set a shorter timeout to prevent long loading - Only 800ms
       authTimeout = setTimeout(() => {
         if (mounted && loading) {
-          console.warn('[DEBUG] Auth initialization timed out after 1500ms at:', new Date().toISOString());
+          console.warn('[DEBUG] Auth initialization timed out after 800ms at:', new Date().toISOString());
           setLoading(false);
         }
-      }, 1500); // Keeping this at 1500ms
+      }, 800);
       
       try {
         console.log('[DEBUG] Getting auth session from Supabase');
@@ -44,8 +44,10 @@ export const useAuthState = () => {
         if (session?.user && mounted) {
           console.log('[DEBUG] Session found, setting user at:', new Date().toISOString());
           setUser(session.user);
-          console.log('[DEBUG] Fetching user profile for ID:', session.user.id);
-          await fetchUserProfile(session.user.id);
+          // Don't await profile fetch, do it in background
+          fetchUserProfile(session.user.id).catch(err => 
+            console.error('[DEBUG] Background profile fetch error:', err)
+          );
         } else if (mounted) {
           console.log('[DEBUG] No session found, user is logged out');
           setUser(null);
@@ -79,8 +81,10 @@ export const useAuthState = () => {
           if (session?.user) {
             console.log('[DEBUG] User signed in:', session.user.email);
             setUser(session.user);
-            console.log('[DEBUG] Fetching profile after sign in');
-            await fetchUserProfile(session.user.id);
+            // Start profile fetch but don't await it
+            fetchUserProfile(session.user.id).catch(err => 
+              console.error('[DEBUG] Background profile fetch error:', err)
+            );
           }
         } else if (event === 'SIGNED_OUT') {
           console.log('[DEBUG] User signed out, clearing state');

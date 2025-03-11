@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 
 const LoadingScreen: React.FC = () => {
   const { t } = useTranslation();
-  const [progress, setProgress] = useState(10);
+  const [progress, setProgress] = useState(20);
   const [imgLoaded, setImgLoaded] = useState(false);
 
   // Use a faster progress simulation
@@ -20,11 +20,11 @@ const LoadingScreen: React.FC = () => {
       if (!unmounted) {
         console.log("[DEBUG] Auth page: Logo loaded in loading screen");
         setImgLoaded(true);
-        setProgress(30); // Jump to 30% when logo is loaded
+        setProgress(50); // Jump to 50% when logo is loaded
       }
     };
     
-    // Faster progress updates for better UX
+    // Much faster progress updates for better UX
     const interval = setInterval(() => {
       if (unmounted) return;
       
@@ -33,13 +33,22 @@ const LoadingScreen: React.FC = () => {
           clearInterval(interval);
           return 90;
         }
-        return prev + 15; // Faster increments
+        return prev + 20; // Much faster increments
       });
-    }, 70); // Faster interval
+    }, 50); // Much faster interval - 50ms instead of 70ms
+    
+    // Force progress to complete after 1 second no matter what
+    const forceCompleteTimeout = setTimeout(() => {
+      if (!unmounted) {
+        clearInterval(interval);
+        setProgress(100);
+      }
+    }, 1000);
 
     return () => {
       unmounted = true;
       clearInterval(interval);
+      clearTimeout(forceCompleteTimeout);
     };
   }, []);
 

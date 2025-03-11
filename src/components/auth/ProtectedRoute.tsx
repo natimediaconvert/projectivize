@@ -20,6 +20,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { user, profile, loading, authInitialized } = useAuth();
   const location = useLocation();
   const [showRetry, setShowRetry] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
   
   // Log protected route state
   useEffect(() => {
@@ -29,6 +30,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       'authInitialized:', authInitialized,
       'user:', user ? 'logged in' : 'not logged in'
     );
+    
+    // Hide loading screen quickly if we have determined auth state
+    if (!loading || user || authInitialized) {
+      const quickHideTimeout = setTimeout(() => {
+        setShowLoading(false);
+      }, 100);
+      
+      return () => clearTimeout(quickHideTimeout);
+    }
   }, [location.pathname, loading, authInitialized, user]);
   
   // Set a faster timeout to show retry button if loading takes too long
@@ -36,11 +46,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     let timeoutId: NodeJS.Timeout;
     
     if (loading) {
-      // Show retry after 3 seconds of loading (reduced from 5)
+      // Show retry after 1.5 seconds of loading (reduced from 3)
       timeoutId = setTimeout(() => {
         console.log('[DEBUG] ProtectedRoute showing retry button after timeout');
         setShowRetry(true);
-      }, 3000);
+      }, 1500);
     } else {
       setShowRetry(false);
     }
@@ -56,8 +66,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     window.location.reload();
   };
 
-  // If still loading auth state, show loading indicator
-  if (loading || !authInitialized) {
+  // If still loading auth state and we're showing loading, show loading indicator
+  if ((loading || !authInitialized) && showLoading) {
     console.log('[DEBUG] ProtectedRoute showing loading state');
     return (
       <div className="flex flex-col justify-center items-center h-screen">

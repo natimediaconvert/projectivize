@@ -46,13 +46,13 @@ export const useSessionCheck = () => {
     // Check session immediately
     checkUser();
     
-    // Add a short safety timeout to prevent long loading - reduce to 500ms
+    // Add a very short safety timeout to prevent long loading - only 300ms
     const safetyTimeoutId = setTimeout(() => {
       if (isMounted && checkingSession) {
         console.log("[DEBUG] Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 500); // Reduced from 800ms to 500ms for faster display
+    }, 300); // Reduced from 500ms to 300ms for faster display
     
     // Listen for auth state changes
     const { data } = supabase.auth.onAuthStateChange((event, session) => {

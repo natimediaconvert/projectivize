@@ -10,14 +10,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { user, profile, loading: stateLoading, setUser, setProfile } = useAuthState();
   const { fetchUserProfile, updateUserProfile } = useProfile();
   
-  // Initialize auth
+  // Initialize auth faster
   useEffect(() => {
-    // Mark auth as initialized once the useAuthState has completed its initial check
-    if (!stateLoading && !authInitialized) {
-      console.log('[DEBUG] Auth initialized at:', new Date().toISOString(), 'user state:', user ? 'logged in' : 'logged out');
+    // Mark auth as initialized quickly
+    if (!authInitialized) {
+      console.log('[DEBUG] Auth initialized at:', new Date().toISOString());
       setAuthInitialized(true);
     }
-  }, [stateLoading, authInitialized, user]);
+  }, [authInitialized]);
   
   const { 
     signIn, 
@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile, updateUserProfile });
 
   // Only consider auth as loading during initial check
-  const loading = stateLoading;
+  const loading = stateLoading && !authInitialized;
 
   // Add some debug info
   useEffect(() => {

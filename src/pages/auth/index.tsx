@@ -34,17 +34,17 @@ export default function AuthPage() {
     // Log when the auth page renders
     console.log("[DEBUG] Auth page rendered at:", new Date().toISOString(), "checkingSession:", checkingSession);
     
-    // Add a quick timeout to prevent a flash of the auth form while checking session
-    const showAuthTimeout = setTimeout(() => {
-      if (!checkingSession) {
+    // Show auth form quickly if not checking session
+    if (!checkingSession) {
+      setShowAuthCard(true);
+    } else {
+      // Add a faster timeout to show auth card anyway after a short delay
+      const forceShowTimeout = setTimeout(() => {
         setShowAuthCard(true);
-      }
-    }, 100); // Short delay to let checkingSession update first
-    
-    return () => {
-      console.log("[DEBUG] Auth page unmounted at:", new Date().toISOString());
-      clearTimeout(showAuthTimeout);
-    };
+      }, 500);
+      
+      return () => clearTimeout(forceShowTimeout);
+    }
   }, [checkingSession]);
 
   // Update showAuthCard when checkingSession changes
@@ -54,13 +54,13 @@ export default function AuthPage() {
       // Add a small delay to ensure smooth transition
       const timer = setTimeout(() => {
         setShowAuthCard(true);
-      }, 50);
+      }, 10); // Very small delay (10ms instead of 50ms)
       return () => clearTimeout(timer);
     }
   }, [checkingSession]);
 
-  // Show loading screen if checking session or if we're not ready to show auth card
-  if (checkingSession || !showAuthCard) {
+  // Show loading screen if checking session and we're not ready to show auth card
+  if (checkingSession && !showAuthCard) {
     console.log("[DEBUG] Auth page showing loading screen, logoLoaded:", logoLoaded);
     return <LoadingScreen />;
   }
