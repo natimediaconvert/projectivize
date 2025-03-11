@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useProfile } from './useProfile';
@@ -22,10 +23,8 @@ export const useAuthState = () => {
         if (mounted && loading) {
           console.warn('Auth initialization timed out');
           setLoading(false);
-          setUser(null);
-          setProfile(null);
         }
-      }, 5000); // 5 second timeout
+      }, 10000); // Increase timeout to 10 seconds
       
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -33,8 +32,6 @@ export const useAuthState = () => {
         if (error) {
           console.error('Error getting session:', error.message);
           if (mounted) {
-            setUser(null);
-            setProfile(null);
             setLoading(false);
           }
           return;
@@ -43,16 +40,9 @@ export const useAuthState = () => {
         if (session?.user && mounted) {
           setUser(session.user);
           await fetchUserProfile(session.user.id);
-        } else if (mounted) {
-          setUser(null);
-          setProfile(null);
-        }
+        } 
       } catch (error) {
         console.error('Error initializing auth:', error);
-        if (mounted) {
-          setUser(null);
-          setProfile(null);
-        }
       } finally {
         if (mounted) {
           setLoading(false);
@@ -79,7 +69,7 @@ export const useAuthState = () => {
           setProfile(null);
         }
         
-        // Only set loading to false after we've processed the auth state change
+        // Set loading to false after processing the auth state change
         setLoading(false);
       }
     );

@@ -1,13 +1,22 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AuthContext from './AuthContext';
 import { useAuthState } from './useAuth';
 import { useAuthMethods } from './useAuthMethods';
 import { useProfile } from './useProfile';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [authInitialized, setAuthInitialized] = useState(false);
   const { user, profile, loading: stateLoading, setUser, setProfile } = useAuthState();
   const { fetchUserProfile, updateUserProfile } = useProfile();
+  
+  // Initialize auth
+  useEffect(() => {
+    // Mark auth as initialized once the useAuthState has completed its initial check
+    if (!stateLoading && !authInitialized) {
+      setAuthInitialized(true);
+    }
+  }, [stateLoading, authInitialized]);
   
   const { 
     signIn, 
@@ -17,8 +26,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading: methodsLoading 
   } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile, updateUserProfile });
 
-  // Combine loading states
-  const loading = stateLoading || methodsLoading;
+  // Combine loading states - don't consider auth initialized until initial loading is complete
+  const loading = stateLoading || methodsLoading || !authInitialized;
 
   const value = {
     user,
