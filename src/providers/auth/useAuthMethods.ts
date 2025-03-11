@@ -1,9 +1,11 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
 import { User, UserProfile } from './types';
 import { useProfile } from './useProfile';
+import { useNavigate } from 'react-router-dom';
 
 type ProfileHelpers = {
   profile: UserProfile | null;
@@ -20,6 +22,7 @@ export const useAuthMethods = (
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -85,15 +88,28 @@ export const useAuthMethods = (
   const signOut = async () => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      console.log('Signing out...');
       
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Sign out error:', error);
+        throw error;
+      }
+      
+      // Manually clear user and profile state
       setUser(null);
+      setProfile(null);
+      
+      console.log('Sign out successful, user state cleared');
+      
+      // Redirect to auth page after sign out
+      navigate('/auth');
       
       toast({
         title: t('signedOut'),
       });
     } catch (error: any) {
+      console.error('Sign out error:', error);
       toast({
         title: t('error'),
         description: error.message,

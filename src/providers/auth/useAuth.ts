@@ -24,7 +24,7 @@ export const useAuthState = () => {
           console.warn('Auth initialization timed out');
           setLoading(false);
         }
-      }, 10000); // Increase timeout to 10 seconds
+      }, 20000); // 20 second timeout
       
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -33,14 +33,20 @@ export const useAuthState = () => {
           console.error('Error getting session:', error.message);
           if (mounted) {
             setLoading(false);
+            clearTimeout(authTimeout);
           }
           return;
         }
         
         if (session?.user && mounted) {
+          console.log('Session found, setting user');
           setUser(session.user);
           await fetchUserProfile(session.user.id);
-        } 
+        } else if (mounted) {
+          console.log('No session found, user is logged out');
+          setUser(null);
+          setProfile(null);
+        }
       } catch (error) {
         console.error('Error initializing auth:', error);
       } finally {
@@ -59,12 +65,17 @@ export const useAuthState = () => {
         
         if (!mounted) return;
         
+        // Clear timeout on any auth state change
+        clearTimeout(authTimeout);
+        
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session?.user) {
+            console.log('User signed in:', session.user.email);
             setUser(session.user);
             await fetchUserProfile(session.user.id);
           }
         } else if (event === 'SIGNED_OUT') {
+          console.log('User signed out, clearing state');
           setUser(null);
           setProfile(null);
         }
