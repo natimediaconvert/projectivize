@@ -12,6 +12,7 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "@/providers/i18n/TranslationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
+import { Button } from "@/components/ui/button";
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -30,22 +31,27 @@ export default function Navigation() {
     { title: t("settings"), icon: Settings, path: "/settings" },
   ];
 
+  const handleNavigation = (path: string) => {
+    console.log("Navigating to:", path);
+    navigate(path);
+  };
+
   return (
     <Sidebar variant="sidebar">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    onClick={() => navigate(item.path)}
-                    className={`w-full ${
+                <SidebarMenuItem key={item.path}>
+                  <SidebarMenuButton 
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center ${
                       location.pathname === item.path ? "bg-primary text-white" : ""
                     }`}
                   >
-                    <item.icon className={`h-4 w-4 ${direction === "rtl" ? "sidebar-icon ml-2" : "mr-2"}`} />
-                    <span>{item.title}</span>
+                    <item.icon className={`h-5 w-5 ${direction === "rtl" ? "ml-3" : "mr-3"}`} />
+                    <span className="text-base">{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
