@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import AuthContext from './AuthContext';
 import { useAuthState } from './useAuth';
@@ -9,12 +10,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { user, profile, loading: stateLoading, setUser, setProfile } = useAuthState();
   const { fetchUserProfile, updateUserProfile } = useProfile();
   
-  // Initialize auth
+  // Initialize auth with improved logging and timing
   useEffect(() => {
-    // Mark auth as initialized once the useAuthState has completed its initial check
     if (!stateLoading && !authInitialized) {
       console.log('Auth initialized, user state:', user ? 'logged in' : 'logged out');
       setAuthInitialized(true);
+      
+      // If user is authenticated, ensure the UI is updated immediately
+      if (user && window.location.pathname === '/auth') {
+        console.log('User is authenticated but on auth page, redirecting to home');
+        window.location.href = '/';
+      }
     }
   }, [stateLoading, authInitialized, user]);
   
@@ -26,7 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading: methodsLoading 
   } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile, updateUserProfile });
 
-  // Keep loading state simple - only consider auth loading during initial auth check
+  // Simplified loading state
   const loading = stateLoading;
 
   const value = {

@@ -25,14 +25,8 @@ export const useSessionCheck = () => {
         
         if (data.session) {
           console.log("Auth page: User has active session, redirecting to home");
-          // Use setTimeout to ensure this happens outside the current execution cycle
-          // and give a bit more time for the auth state to be properly updated
-          setTimeout(() => {
-            if (isMounted) {
-              console.log("Auth page: Navigating to home page");
-              navigate('/', { replace: true });
-            }
-          }, 300); // Significantly increased timeout for more reliable navigation
+          // Use less delay and window.location for more reliable navigation
+          window.location.href = '/';
         } else {
           console.log("Auth page: No active session found");
           setCheckingSession(false);
@@ -48,13 +42,13 @@ export const useSessionCheck = () => {
     // Check session immediately
     checkUser();
     
-    // Add a safety timeout to prevent indefinite loading
+    // Add a shorter safety timeout to prevent indefinite loading
     const safetyTimeoutId = setTimeout(() => {
       if (isMounted && checkingSession) {
         console.log("Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 1500); // Increased timeout for better reliability
+    }, 1000); // Reduced timeout for faster UI response
     
     // Listen for auth state changes
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -64,15 +58,8 @@ export const useSessionCheck = () => {
       
       if (event === 'SIGNED_IN' && session) {
         console.log("Auth page: User signed in, redirecting to home");
-        // Use setTimeout to ensure this happens outside the current execution cycle
-        // and give a bit more time for the auth state to be properly updated
-        setTimeout(() => {
-          if (isMounted) {
-            console.log("Auth page: Navigating to home page after sign in");
-            // Force refresh the page when redirecting after sign in
-            window.location.href = '/';
-          }
-        }, 500); // Significantly increased timeout for more reliable navigation
+        // Use window.location for more reliable navigation after sign in
+        window.location.href = '/';
       }
     });
     

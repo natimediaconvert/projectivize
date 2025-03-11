@@ -28,15 +28,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     let loadingTimeoutId: NodeJS.Timeout;
     
     if (loading) {
-      // Show retry after 3 seconds of loading
+      // Show retry after 2 seconds of loading
       timeoutId = setTimeout(() => {
         setShowRetry(true);
-      }, 3000);
+      }, 2000);
       
-      // Force navigation after 6 seconds regardless of loading state
+      // Force navigation after 4 seconds regardless of loading state
       loadingTimeoutId = setTimeout(() => {
         setLoadingTimeout(true);
-      }, 6000);
+      }, 4000);
     } else {
       setShowRetry(false);
       setLoadingTimeout(false);

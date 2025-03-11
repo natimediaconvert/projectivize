@@ -18,13 +18,13 @@ export const useAuthState = () => {
       
       setLoading(true);
       
-      // Set a timeout to prevent infinite loading - increased to 5 seconds from 3
+      // Shorter timeout (3 seconds) for auth initialization
       authTimeout = setTimeout(() => {
         if (mounted && loading) {
           console.warn('Auth initialization timed out');
           setLoading(false);
         }
-      }, 5000); // 5 second timeout instead of 3
+      }, 3000);
       
       try {
         console.log('Checking for existing session...');
@@ -43,6 +43,12 @@ export const useAuthState = () => {
           console.log('Existing session found, setting user:', session.user.email);
           setUser(session.user);
           await fetchUserProfile(session.user.id);
+          
+          // If on auth page with valid session, redirect to home
+          if (window.location.pathname === '/auth') {
+            console.log('Redirecting from auth page to home due to valid session');
+            window.location.href = '/';
+          }
         } else if (mounted) {
           console.log('No session found, user is logged out');
           setUser(null);
@@ -60,7 +66,7 @@ export const useAuthState = () => {
 
     initAuth();
 
-    // Listen for auth state changes
+    // Listen for auth state changes with improved handling
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event);
@@ -75,6 +81,12 @@ export const useAuthState = () => {
             console.log('User signed in:', session.user.email);
             setUser(session.user);
             await fetchUserProfile(session.user.id);
+            
+            // Force redirect to home page immediately after sign in
+            if (window.location.pathname === '/auth') {
+              console.log('Detected sign in on auth page, redirecting to home');
+              window.location.href = '/';
+            }
           }
         } else if (event === 'SIGNED_OUT') {
           console.log('User signed out, clearing state');
@@ -82,7 +94,6 @@ export const useAuthState = () => {
           setProfile(null);
         }
         
-        // Set loading to false after processing the auth state change
         setLoading(false);
       }
     );
