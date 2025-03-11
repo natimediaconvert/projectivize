@@ -1,8 +1,8 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 
 // Use the same UIRole type as defined in AuthProvider
 type UIRole = 'admin' | 'manager' | 'team_member' | 'guest' | 'employee' | 'team_lead';
@@ -18,6 +18,29 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const { user, profile, loading } = useAuth();
   const location = useLocation();
+  const [showRetry, setShowRetry] = useState(false);
+
+  // Set a timeout to show retry button if loading takes too long
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    if (loading) {
+      timeoutId = setTimeout(() => {
+        setShowRetry(true);
+      }, 8000); // Show retry after 8 seconds of loading
+    } else {
+      setShowRetry(false);
+    }
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [loading]);
+
+  // Handle retry button click
+  const handleRetry = () => {
+    window.location.reload();
+  };
 
   // If still loading auth state, show loading indicator
   if (loading) {
@@ -32,6 +55,21 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             <Skeleton className="h-4 w-4/6" />
           </div>
           <Skeleton className="h-10 w-28 mx-auto" />
+          
+          {showRetry && (
+            <div className="flex flex-col items-center mt-8 space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Taking longer than expected...
+              </p>
+              <Button 
+                variant="outline" 
+                onClick={handleRetry}
+                className="mt-2"
+              >
+                Retry
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     );
