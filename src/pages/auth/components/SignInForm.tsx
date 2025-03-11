@@ -39,6 +39,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
+            autoComplete="email"
           />
         </div>
         <div className="space-y-2">
@@ -52,6 +53,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
+            autoComplete="current-password"
           />
         </div>
       </CardContent>

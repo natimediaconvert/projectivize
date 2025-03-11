@@ -1,6 +1,5 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
@@ -10,7 +9,6 @@ export const useAuthForms = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
 
@@ -63,24 +61,34 @@ export const useAuthForms = () => {
     try {
       console.log("Attempting to sign in with email:", email);
       
-      // Sign in with no extra complexity
+      // Set up abort controller for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
+      clearTimeout(timeoutId);
+      
       if (error) throw error;
       
-      // On successful sign-in, just show a toast - navigation will be handled by the auth state change
+      console.log("Sign in successful via useAuthForms");
+      
       toast({
         title: t('welcomeBack'),
       });
       
-      // We don't call navigate here anymore - let the auth state change listener handle it
+      // Note: Navigation is handled by the auth state change listener in useSessionCheck
       
     } catch (error: any) {
-      console.error("Sign in error:", error.message);
-      handleError(error.message);
+      if (error.name === 'AbortError') {
+        handleError('Sign in request timed out. Please try again.');
+      } else {
+        console.error("Sign in error:", error.message);
+        handleError(error.message);
+      }
     } finally {
       setLoading(false);
     }

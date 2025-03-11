@@ -25,7 +25,12 @@ export const useSessionCheck = () => {
         
         if (data.session) {
           console.log("Auth page: User has active session, redirecting to home");
-          navigate('/', { replace: true });
+          // Use setTimeout to ensure this happens outside the current execution cycle
+          setTimeout(() => {
+            if (isMounted) {
+              navigate('/', { replace: true });
+            }
+          }, 10);
         } else {
           console.log("Auth page: No active session found");
           setCheckingSession(false);
@@ -47,7 +52,7 @@ export const useSessionCheck = () => {
         console.log("Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 2000); // Reducing timeout to 2 seconds for better UX
+    }, 1500); // Reducing timeout to 1.5 seconds for better UX
     
     // Listen for auth state changes
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -57,7 +62,12 @@ export const useSessionCheck = () => {
       
       if (event === 'SIGNED_IN' && session) {
         console.log("Auth page: User signed in, redirecting to home");
-        navigate('/', { replace: true });
+        // Use setTimeout to ensure this happens outside the current execution cycle
+        setTimeout(() => {
+          if (isMounted) {
+            navigate('/', { replace: true });
+          }
+        }, 10);
       }
     });
     
