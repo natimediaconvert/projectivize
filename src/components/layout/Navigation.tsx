@@ -12,7 +12,6 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "@/providers/i18n/TranslationProvider";
 import { useTheme } from "@/providers/ThemeProvider";
-import { Button } from "@/components/ui/button";
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ export default function Navigation() {
   const { direction } = useTheme();
 
   const navigationItems = [
-    { title: t("myDay"), icon: Calendar, path: "/my-day" },
     { title: t("dashboard"), icon: LayoutDashboard, path: "/" },
     { title: t("tasks"), icon: ListTodo, path: "/tasks" },
     { title: t("projects"), icon: FolderKanban, path: "/projects" },
@@ -29,29 +27,30 @@ export default function Navigation() {
     { title: t("reports"), icon: BarChart3, path: "/reports" },
     { title: t("goals"), icon: Target, path: "/goals" },
     { title: t("settings"), icon: Settings, path: "/settings" },
+    // Removing "my day" to match the provided image
   ];
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (path) => {
     console.log("Navigating to:", path);
     navigate(path);
   };
 
   return (
-    <Sidebar variant="sidebar">
+    <Sidebar variant="sidebar" className="bg-white border-r z-10">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu className="space-y-1 p-2">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     onClick={() => handleNavigation(item.path)}
-                    className={`w-full flex items-center ${
-                      location.pathname === item.path ? "bg-primary text-white" : ""
+                    className={`w-full flex items-center p-2 rounded-md ${
+                      location.pathname === item.path ? "bg-blue-500 text-white" : "hover:bg-gray-100"
                     }`}
                   >
                     <item.icon className={`h-5 w-5 ${direction === "rtl" ? "ml-3" : "mr-3"}`} />
-                    <span className="text-base">{item.title}</span>
+                    <span className="text-base font-medium">{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
