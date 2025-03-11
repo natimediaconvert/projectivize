@@ -27,7 +27,6 @@ export default function Navigation() {
     { title: t("reports"), icon: BarChart3, path: "/reports" },
     { title: t("goals"), icon: Target, path: "/goals" },
     { title: t("settings"), icon: Settings, path: "/settings" },
-    // Removing "my day" to match the provided image
   ];
 
   const handleNavigation = (path) => {
@@ -40,12 +39,12 @@ export default function Navigation() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1 p-2">
+            <SidebarMenu className="space-y-2 p-3">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     onClick={() => handleNavigation(item.path)}
-                    className={`w-full flex items-center p-2 rounded-md ${
+                    className={`w-full flex items-center p-3 rounded-md ${
                       location.pathname === item.path ? "bg-blue-500 text-white" : "hover:bg-gray-100"
                     }`}
                   >
