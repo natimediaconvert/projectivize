@@ -12,11 +12,11 @@ const TopBar = () => {
   
   return (
     <div className="h-20 border-b bg-[#1EAEDB] text-white backdrop-blur supports-[backdrop-filter]:bg-[#1EAEDB]/95 flex items-center justify-between px-6 sticky top-0 z-50">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center h-full pl-2">
         <img 
           src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" 
           alt="QualiTasks Logo" 
-          className="h-80 w-auto" 
+          className="h-16 w-auto my-auto" 
         />
       </div>
       
