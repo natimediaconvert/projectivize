@@ -50,10 +50,10 @@ const LoadingScreen: React.FC = () => {
           <img 
             src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" 
             alt="QualiTasks Logo" 
-            className="h-24 w-auto mx-auto mb-8" 
+            className="h-72 w-auto mx-auto mb-8" 
           />
         ) : (
-          <div className="h-24 w-auto mx-auto mb-8 flex items-center justify-center">
+          <div className="h-72 w-auto mx-auto mb-8 flex items-center justify-center">
             <Loader2 className="h-10 w-10 animate-spin" />
           </div>
         )}
