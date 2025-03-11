@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -90,15 +89,16 @@ export const useAuthMethods = (
       setLoading(true);
       console.log('Signing out...');
       
+      // First clear user state to prevent UI issues
+      setUser(null);
+      setProfile(null);
+      
+      // Then sign out from Supabase
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Sign out error:', error);
         throw error;
       }
-      
-      // Manually clear user and profile state
-      setUser(null);
-      setProfile(null);
       
       console.log('Sign out successful, user state cleared');
       

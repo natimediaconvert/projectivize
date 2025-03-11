@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile, updateUserProfile });
 
   // Combine loading states - don't consider auth initialized until initial loading is complete
-  const loading = stateLoading || methodsLoading || !authInitialized;
+  const loading = stateLoading || (!authInitialized && methodsLoading);
 
   const value = {
     user,
