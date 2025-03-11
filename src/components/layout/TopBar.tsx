@@ -11,7 +11,7 @@ const TopBar = () => {
   } = useTheme();
   return <div className="h-20 border-b bg-[#1EAEDB] text-white backdrop-blur supports-[backdrop-filter]:bg-[#1EAEDB]/95 flex items-center justify-between px-6 sticky top-0 z-50">
       <div className="flex items-center gap-4">
-        <img src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" alt="QualiTasks Logo" className="h-55 w-auto" />
+        <img src="/lovable-uploads/0cc3f056-b4cc-437a-8752-2e98414e29f8.png" alt="QualiTasks Logo" className="h-70 w-auto" />
       </div>
       
       <div className="flex items-center gap-4">
