@@ -23,7 +23,6 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 60000, // Cache data for 1 minute to prevent frequent refetching
     },
   },
 });
@@ -51,8 +50,8 @@ const App = () => (
                 <Route path="/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
                 
-                {/* Redirect any unknown routes to home if logged in, otherwise to auth */}
-                <Route path="*" element={<Navigate to="/" />} />
+                {/* Fallback route - redirect to auth if not logged in, otherwise 404 */}
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </TooltipProvider>
           </AuthProvider>

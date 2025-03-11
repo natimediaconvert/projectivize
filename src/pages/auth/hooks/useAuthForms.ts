@@ -80,9 +80,7 @@ export const useAuthForms = () => {
         title: t('welcomeBack'),
       });
       
-      // Immediate redirect to home page after successful login
-      console.log("Redirecting to home page after successful login");
-      window.location.href = '/';
+      // Note: Navigation is handled by the auth state change listener in useSessionCheck
       
     } catch (error: any) {
       if (error.name === 'AbortError') {

@@ -25,8 +25,12 @@ export const useSessionCheck = () => {
         
         if (data.session) {
           console.log("Auth page: User has active session, redirecting to home");
-          // Use less delay and window.location for more reliable navigation
-          window.location.href = '/';
+          // Use setTimeout to ensure this happens outside the current execution cycle
+          setTimeout(() => {
+            if (isMounted) {
+              navigate('/', { replace: true });
+            }
+          }, 100); // Increased timeout for more reliable navigation
         } else {
           console.log("Auth page: No active session found");
           setCheckingSession(false);
@@ -42,13 +46,13 @@ export const useSessionCheck = () => {
     // Check session immediately
     checkUser();
     
-    // Add a shorter safety timeout to prevent indefinite loading
+    // Add a safety timeout to prevent indefinite loading
     const safetyTimeoutId = setTimeout(() => {
       if (isMounted && checkingSession) {
         console.log("Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 1000); // Reduced timeout for faster UI response
+    }, 1000); // Reducing timeout to 1 second for better UX
     
     // Listen for auth state changes
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -58,8 +62,12 @@ export const useSessionCheck = () => {
       
       if (event === 'SIGNED_IN' && session) {
         console.log("Auth page: User signed in, redirecting to home");
-        // Use window.location for more reliable navigation after sign in
-        window.location.href = '/';
+        // Use setTimeout to ensure this happens outside the current execution cycle
+        setTimeout(() => {
+          if (isMounted) {
+            navigate('/', { replace: true });
+          }
+        }, 100); // Increased timeout for more reliable navigation
       }
     });
     
