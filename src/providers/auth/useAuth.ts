@@ -18,15 +18,16 @@ export const useAuthState = () => {
       
       setLoading(true);
       
-      // Set a timeout to prevent infinite loading
+      // Set a timeout to prevent infinite loading - increased to 5 seconds from 3
       authTimeout = setTimeout(() => {
         if (mounted && loading) {
           console.warn('Auth initialization timed out');
           setLoading(false);
         }
-      }, 3000); // 3 second timeout
+      }, 5000); // 5 second timeout instead of 3
       
       try {
+        console.log('Checking for existing session...');
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -39,7 +40,7 @@ export const useAuthState = () => {
         }
         
         if (session?.user && mounted) {
-          console.log('Session found, setting user');
+          console.log('Existing session found, setting user:', session.user.email);
           setUser(session.user);
           await fetchUserProfile(session.user.id);
         } else if (mounted) {

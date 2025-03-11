@@ -26,11 +26,13 @@ export const useSessionCheck = () => {
         if (data.session) {
           console.log("Auth page: User has active session, redirecting to home");
           // Use setTimeout to ensure this happens outside the current execution cycle
+          // and give a bit more time for the auth state to be properly updated
           setTimeout(() => {
             if (isMounted) {
+              console.log("Auth page: Navigating to home page");
               navigate('/', { replace: true });
             }
-          }, 100); // Increased timeout for more reliable navigation
+          }, 300); // Significantly increased timeout for more reliable navigation
         } else {
           console.log("Auth page: No active session found");
           setCheckingSession(false);
@@ -52,7 +54,7 @@ export const useSessionCheck = () => {
         console.log("Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 1000); // Reducing timeout to 1 second for better UX
+    }, 1500); // Increased timeout for better reliability
     
     // Listen for auth state changes
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -63,11 +65,14 @@ export const useSessionCheck = () => {
       if (event === 'SIGNED_IN' && session) {
         console.log("Auth page: User signed in, redirecting to home");
         // Use setTimeout to ensure this happens outside the current execution cycle
+        // and give a bit more time for the auth state to be properly updated
         setTimeout(() => {
           if (isMounted) {
-            navigate('/', { replace: true });
+            console.log("Auth page: Navigating to home page after sign in");
+            // Force refresh the page when redirecting after sign in
+            window.location.href = '/';
           }
-        }, 100); // Increased timeout for more reliable navigation
+        }, 500); // Significantly increased timeout for more reliable navigation
       }
     });
     

@@ -63,7 +63,7 @@ export const useAuthForms = () => {
       
       // Set up abort controller for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
       
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -80,7 +80,11 @@ export const useAuthForms = () => {
         title: t('welcomeBack'),
       });
       
-      // Note: Navigation is handled by the auth state change listener in useSessionCheck
+      // Force redirect to home page after successful login
+      // This is a backup in case the auth state listener doesn't trigger
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
       
     } catch (error: any) {
       if (error.name === 'AbortError') {

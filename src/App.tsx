@@ -50,8 +50,8 @@ const App = () => (
                 <Route path="/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
                 
-                {/* Fallback route - redirect to auth if not logged in, otherwise 404 */}
-                <Route path="*" element={<NotFound />} />
+                {/* Fallback route - redirect to dashboard if logged in, otherwise to auth */}
+                <Route path="*" element={<Navigate to="/auth" />} />
               </Routes>
             </TooltipProvider>
           </AuthProvider>
