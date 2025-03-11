@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import AuthContext from './AuthContext';
 import { useAuthState } from './useAuth';
@@ -27,8 +26,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading: methodsLoading 
   } = useAuthMethods(user, setUser, { profile, setProfile, fetchUserProfile, updateUserProfile });
 
-  // Combine loading states - don't consider auth initialized until initial loading is complete
-  const loading = stateLoading || (!authInitialized && methodsLoading);
+  // Keep loading state simple - only consider auth loading during initial auth check
+  const loading = stateLoading;
 
   const value = {
     user,

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -20,20 +21,40 @@ export default function AuthPage() {
   const { t } = useTranslation();
 
   useEffect(() => {
+    let isMounted = true;
+    
     const checkUser = async () => {
       try {
+        console.log("Auth page: Checking session...");
         const { data } = await supabase.auth.getSession();
+        
+        if (!isMounted) return;
+        
         if (data.session) {
+          console.log("Auth page: User has active session, redirecting to home");
           navigate('/', { replace: true });
+        } else {
+          console.log("Auth page: No active session found");
         }
       } catch (error) {
         console.error('Error checking session:', error);
       } finally {
-        setCheckingSession(false);
+        if (isMounted) {
+          console.log("Auth page: Session check complete");
+          setCheckingSession(false);
+        }
       }
     };
     
-    checkUser();
+    // Add a short timeout to allow state to settle
+    const timeoutId = setTimeout(() => {
+      checkUser();
+    }, 100);
+    
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
   }, [navigate]);
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -104,6 +125,7 @@ export default function AuthPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <p className="text-lg">{t('checkingSession')}</p>
+          <p className="text-sm text-muted-foreground mt-2">Please wait...</p>
         </div>
       </div>
     );

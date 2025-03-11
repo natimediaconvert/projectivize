@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -86,14 +87,16 @@ export const useAuthMethods = (
 
   const signOut = async () => {
     try {
-      setLoading(true);
       console.log('Signing out...');
       
-      // First clear user state to prevent UI issues
+      // First clear local state immediately
       setUser(null);
       setProfile(null);
       
-      // Then sign out from Supabase
+      // Navigate to auth page first
+      navigate('/auth');
+      
+      // Then sign out from Supabase in the background
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Sign out error:', error);
@@ -101,9 +104,6 @@ export const useAuthMethods = (
       }
       
       console.log('Sign out successful, user state cleared');
-      
-      // Redirect to auth page after sign out
-      navigate('/auth');
       
       toast({
         title: t('signedOut'),
