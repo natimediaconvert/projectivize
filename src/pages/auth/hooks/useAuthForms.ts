@@ -60,37 +60,14 @@ export const useAuthForms = () => {
     e.preventDefault();
     setLoading(true);
     
-    // Declare the timeout variable
-    let timeoutId: NodeJS.Timeout | undefined = undefined;
-    
     try {
-      // Set a timeout for the sign-in process
-      const timeoutPromise = new Promise((_, reject) => {
-        timeoutId = setTimeout(() => {
-          reject(new Error("Sign in request timed out. Please try again."));
-        }, 8000);
-      });
-      
       console.log("Attempting to sign in with email:", email);
       
-      // Race between the sign-in process and the timeout
-      const result = await Promise.race([
-        supabase.auth.signInWithPassword({
-          email,
-          password,
-        }),
-        timeoutPromise
-      ]);
-      
-      // If we got here, the sign-in completed before timeout
-      // Clear the timeout
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        timeoutId = undefined;
-      }
-      
-      // Now process the result
-      const { data, error } = result as Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>;
+      // Simpler approach: just use the promise directly with a timeout
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       
       if (error) throw error;
       
@@ -102,18 +79,9 @@ export const useAuthForms = () => {
         navigate('/', { replace: true });
       }
     } catch (error: any) {
-      // Clear the timeout if it exists
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      
       console.error("Sign in error:", error.message);
       handleError(error.message);
     } finally {
-      // Just to be extra safe, clear the timeout again
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
       setLoading(false);
     }
   };

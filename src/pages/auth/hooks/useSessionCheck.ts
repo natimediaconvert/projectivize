@@ -47,7 +47,7 @@ export const useSessionCheck = () => {
         console.log("Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 3000); // Reducing timeout to 3 seconds for better UX
+    }, 5000); // Increasing timeout to 5 seconds for better reliability
     
     return () => {
       isMounted = false;
