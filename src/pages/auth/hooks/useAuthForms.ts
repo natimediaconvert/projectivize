@@ -1,8 +1,7 @@
 
 import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/providers/AuthProvider';
 import { useToast } from '@/components/ui/use-toast';
-import { useTranslation } from '@/providers/i18n/TranslationProvider';
 import { useNavigate } from 'react-router-dom';
 
 export const useAuthForms = () => {
@@ -10,89 +9,107 @@ export const useAuthForms = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
+  const { signIn, signUp } = useAuth();
   const { toast } = useToast();
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Helper function to reset the loading state and show an error message
-  const handleError = (message: string) => {
-    setLoading(false);
-    toast({
-      title: t('error'),
-      description: message,
-      variant: 'destructive',
-    });
-  };
-
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email || !password) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Email and password are required'
+      });
+      return;
+    }
+    
     setLoading(true);
+    console.log('[DEBUG] Attempting to sign in with email:', email, 'at:', new Date().toISOString());
     
     try {
-      console.log("Attempting to sign up with email:", email);
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-        },
-      });
-
-      if (error) throw error;
+      const startTime = Date.now();
+      const result = await signIn({ email, password });
+      const duration = Date.now() - startTime;
       
-      if (data.user) {
+      if (result.error) {
+        console.error('[DEBUG] Sign in error:', result.error.message);
         toast({
-          title: t('signupSuccess'),
-          description: t('checkEmail'),
+          variant: 'destructive',
+          title: 'Error signing in',
+          description: result.error.message
+        });
+      } else {
+        console.log(`[DEBUG] Sign in successful after ${duration}ms, user:`, result.user?.email);
+        toast({
+          title: 'Welcome back!',
+          description: 'Signed in successfully'
         });
         
-        // If sign up was successful and no email confirmation is required, redirect to home
-        if (!data.session) {
-          setLoading(false);
-          return;
-        }
-        
-        // If we have a session immediately, redirect to home
+        // Add a small timeout to ensure Supabase has time to process the authentication
+        console.log('[DEBUG] Redirecting to dashboard after sign in');
         navigate('/', { replace: true });
       }
     } catch (error: any) {
-      console.error("Sign up error:", error.message);
-      handleError(error.message);
+      console.error('[DEBUG] Unexpected sign in error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'An error occurred during sign in'
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email || !password || !fullName) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'All fields are required'
+      });
+      return;
+    }
+    
     setLoading(true);
+    console.log('[DEBUG] Attempting to sign up with email:', email);
     
     try {
-      console.log("Attempting to sign in with email:", email);
-      
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const result = await signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+          }
+        }
       });
       
-      if (error) throw error;
-      
-      console.log("Sign in successful, redirecting to home");
-      
-      toast({
-        title: t('welcomeBack'),
-      });
-      
-      // Redirect immediately after successful sign in
-      if (data.session) {
-        navigate('/', { replace: true });
+      if (result.error) {
+        console.error('[DEBUG] Sign up error:', result.error.message);
+        toast({
+          variant: 'destructive',
+          title: 'Error signing up',
+          description: result.error.message
+        });
+      } else {
+        console.log('[DEBUG] Sign up successful');
+        toast({
+          title: 'Account created',
+          description: 'Please check your email to confirm your account'
+        });
       }
-      
     } catch (error: any) {
-      console.error("Sign in error:", error.message);
-      handleError(error.message);
+      console.error('[DEBUG] Unexpected sign up error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'An error occurred during sign up'
+      });
     } finally {
       setLoading(false);
     }

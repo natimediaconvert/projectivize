@@ -16,21 +16,24 @@ export const useAuthState = () => {
     const initAuth = async () => {
       if (!mounted) return;
       
+      const startTime = Date.now();
+      console.log('[DEBUG] Starting auth initialization at:', new Date().toISOString());
       setLoading(true);
       
       // Set a shorter timeout to prevent long loading
       authTimeout = setTimeout(() => {
         if (mounted && loading) {
-          console.warn('Auth initialization timed out');
+          console.warn('[DEBUG] Auth initialization timed out after 1500ms at:', new Date().toISOString());
           setLoading(false);
         }
-      }, 1500); // Reduced from 3000ms to 1500ms
+      }, 1500); // Keeping this at 1500ms
       
       try {
+        console.log('[DEBUG] Getting auth session from Supabase');
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Error getting session:', error.message);
+          console.error('[DEBUG] Error getting session:', error.message);
           if (mounted) {
             setLoading(false);
             clearTimeout(authTimeout);
@@ -39,18 +42,21 @@ export const useAuthState = () => {
         }
         
         if (session?.user && mounted) {
-          console.log('Session found, setting user');
+          console.log('[DEBUG] Session found, setting user at:', new Date().toISOString());
           setUser(session.user);
+          console.log('[DEBUG] Fetching user profile for ID:', session.user.id);
           await fetchUserProfile(session.user.id);
         } else if (mounted) {
-          console.log('No session found, user is logged out');
+          console.log('[DEBUG] No session found, user is logged out');
           setUser(null);
           setProfile(null);
         }
       } catch (error) {
-        console.error('Error initializing auth:', error);
+        console.error('[DEBUG] Error initializing auth:', error);
       } finally {
         if (mounted) {
+          const duration = Date.now() - startTime;
+          console.log(`[DEBUG] Auth initialization completed in ${duration}ms`);
           setLoading(false);
           clearTimeout(authTimeout);
         }
@@ -62,7 +68,7 @@ export const useAuthState = () => {
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event);
+        console.log('[DEBUG] Auth state changed:', event, 'at:', new Date().toISOString());
         
         if (!mounted) return;
         
@@ -71,12 +77,13 @@ export const useAuthState = () => {
         
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session?.user) {
-            console.log('User signed in:', session.user.email);
+            console.log('[DEBUG] User signed in:', session.user.email);
             setUser(session.user);
+            console.log('[DEBUG] Fetching profile after sign in');
             await fetchUserProfile(session.user.id);
           }
         } else if (event === 'SIGNED_OUT') {
-          console.log('User signed out, clearing state');
+          console.log('[DEBUG] User signed out, clearing state');
           setUser(null);
           setProfile(null);
         }
@@ -87,6 +94,7 @@ export const useAuthState = () => {
     );
 
     return () => {
+      console.log('[DEBUG] Cleaning up useAuthState effect');
       mounted = false;
       clearTimeout(authTimeout);
       subscription.unsubscribe();

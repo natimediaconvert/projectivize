@@ -12,26 +12,31 @@ export const useSessionCheck = () => {
     
     const checkUser = async () => {
       try {
-        console.log("Auth page: Checking session...");
+        console.log("[DEBUG] Auth page: Starting session check at:", new Date().toISOString());
         const { data, error } = await supabase.auth.getSession();
         
-        if (!isMounted) return;
+        if (!isMounted) {
+          console.log("[DEBUG] Component unmounted during session check");
+          return;
+        }
         
         if (error) {
-          console.error("Auth page: Error checking session:", error.message);
+          console.error("[DEBUG] Auth page: Error checking session:", error.message);
           setCheckingSession(false);
           return;
         }
         
+        console.log("[DEBUG] Auth page: Session check result:", data.session ? "Session found" : "No session");
+        
         if (data.session) {
-          console.log("Auth page: User has active session, redirecting to home");
+          console.log("[DEBUG] Auth page: User has active session, redirecting to home");
           navigate('/', { replace: true });
         } else {
-          console.log("Auth page: No active session found");
+          console.log("[DEBUG] Auth page: No active session found");
           setCheckingSession(false);
         }
       } catch (error: any) {
-        console.error('Error checking session:', error);
+        console.error('[DEBUG] Error checking session:', error);
         if (isMounted) {
           setCheckingSession(false);
         }
@@ -44,24 +49,28 @@ export const useSessionCheck = () => {
     // Add a much shorter safety timeout to prevent long loading
     const safetyTimeoutId = setTimeout(() => {
       if (isMounted && checkingSession) {
-        console.log("Auth page: Safety timeout triggered - forcing completion of session check");
+        console.log("[DEBUG] Auth page: Safety timeout triggered - forcing completion of session check");
         setCheckingSession(false);
       }
-    }, 800); // Reducing timeout to 800ms for much faster UX
+    }, 800); // Keeping timeout at 800ms for fast UX
     
     // Listen for auth state changes
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!isMounted) return;
+      if (!isMounted) {
+        console.log("[DEBUG] Component unmounted during auth state change");
+        return;
+      }
       
-      console.log("Auth page: Auth state changed:", event);
+      console.log("[DEBUG] Auth page: Auth state changed:", event);
       
       if (event === 'SIGNED_IN' && session) {
-        console.log("Auth page: User signed in, redirecting to home");
+        console.log("[DEBUG] Auth page: User signed in, redirecting to home at:", new Date().toISOString());
         navigate('/', { replace: true });
       }
     });
     
     return () => {
+      console.log("[DEBUG] Auth page: Cleaning up useSessionCheck effect");
       isMounted = false;
       clearTimeout(safetyTimeoutId);
       data.subscription.unsubscribe();
