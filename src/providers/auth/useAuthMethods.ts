@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
 import { toast } from '@/components/ui/use-toast';
-import { Profile } from './types';
+import { UserProfile } from './types';
 
 export const useAuthMethods = (
   user: User | null,
   setUser: (user: User | null) => void,
   profileOptions: {
-    profile: Profile | null;
-    setProfile: (profile: Profile | null) => void;
-    fetchUserProfile: (userId: string) => Promise<Profile | null>;
-    updateUserProfile: (userId: string, profile: Partial<Profile>) => Promise<Profile | null>;
+    profile: UserProfile | null;
+    setProfile: (profile: UserProfile | null) => void;
+    fetchUserProfile: (userId: string) => Promise<UserProfile | null>;
+    updateUserProfile: (userId: string, profile: Partial<UserProfile>) => Promise<any>;
   }
 ) => {
   const [loading, setLoading] = useState(false);
@@ -114,7 +114,7 @@ export const useAuthMethods = (
     }
   };
 
-  const updateProfile = async (updates: Partial<Profile>) => {
+  const updateProfile = async (updates: Partial<UserProfile>) => {
     if (!user) {
       console.error('No user to update profile for.');
       return;
