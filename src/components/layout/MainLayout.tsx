@@ -12,7 +12,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full">
           <TopBar />
-          <div className="flex flex-1 h-[calc(100vh-5rem)]">
+          <div className="flex flex-1 pt-20">
             <Navigation />
             <main id="main-content" className="flex-1 p-4 md:p-6 overflow-auto animate-fade-in">
               {children}

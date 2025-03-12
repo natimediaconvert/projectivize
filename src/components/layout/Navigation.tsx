@@ -36,11 +36,11 @@ export default function Navigation() {
   };
 
   return (
-    <Sidebar variant="sidebar" className="bg-white border-r z-10 mt-20">
+    <Sidebar variant="sidebar" className="bg-white border-r z-30 h-[calc(100vh-5rem)]">
       <SidebarContent className="pt-0">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-100px)] overflow-y-auto">
+            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-5rem)] overflow-y-auto">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
