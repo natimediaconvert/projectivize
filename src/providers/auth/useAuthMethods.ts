@@ -1,71 +1,60 @@
+import { User } from '@supabase/supabase-js';
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from '@/providers/i18n/TranslationProvider';
-import { User, UserProfile } from './types';
-import { useProfile } from './useProfile';
-import { useNavigate } from 'react-router-dom';
-
-type ProfileHelpers = {
-  profile: UserProfile | null;
-  setProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>;
-  fetchUserProfile: ReturnType<typeof useProfile>['fetchUserProfile'];
-  updateUserProfile: ReturnType<typeof useProfile>['updateUserProfile'];
-};
+import { toast } from '@/components/ui/use-toast';
+import { Profile } from './types';
 
 export const useAuthMethods = (
-  user: User, 
-  setUser: (user: User) => void,
-  { profile, setProfile, fetchUserProfile, updateUserProfile }: ProfileHelpers
+  user: User | null,
+  setUser: (user: User | null) => void,
+  profileOptions: {
+    profile: Profile | null;
+    setProfile: (profile: Profile | null) => void;
+    fetchUserProfile: (userId: string) => Promise<Profile | null>;
+    updateUserProfile: (userId: string, profile: Partial<Profile>) => Promise<Profile | null>;
+  }
 ) => {
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { profile, setProfile, fetchUserProfile, updateUserProfile } = profileOptions;
 
-  const signIn = async (email: string, password: string): Promise<void> => {
+  const signIn = async (email: string, password: string) => {
+    setLoading(true);
     try {
-      console.log('[DEBUG] Starting sign in process with:', email);
-      setLoading(true);
-      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        console.error('[DEBUG] Sign in error from Supabase:', error.message);
-        throw error;
+        throw new Error(error.message || t('signInTimeout'));
       }
-      
-      console.log('[DEBUG] Sign in successful, user data received:', !!data.user);
-      
+
       if (data.user) {
         setUser(data.user);
         await fetchUserProfile(data.user.id);
         toast({
           title: t('welcomeBack'),
+          description: `${t('signingIn')} ${email}`,
         });
       }
-    } catch (error: any) {
-      console.error('[DEBUG] Error in signIn method:', error.message);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t('error');
       toast({
-        title: t('error'),
-        description: error.message,
         variant: 'destructive',
+        title: t('error'),
+        description: message,
       });
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  const signUp = async (email: string, password: string, fullName: string): Promise<void> => {
+  const signUp = async (email: string, password: string, fullName: string) => {
+    setLoading(true);
     try {
-      console.log('[DEBUG] Starting sign up process with:', email);
-      setLoading(true);
-      
-      const { data, error } = await supabase.auth.signUp({
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -75,83 +64,84 @@ export const useAuthMethods = (
         },
       });
 
-      if (error) {
-        console.error('[DEBUG] Sign up error from Supabase:', error.message);
-        throw error;
+      if (authError) {
+        throw new Error(authError.message || t('error'));
       }
-      
-      console.log('[DEBUG] Sign up successful, confirmation email sent');
-      
+
+      if (authData.user) {
+        setUser(authData.user);
+        await fetchUserProfile(authData.user.id);
+        toast({
+          title: t('signupSuccess'),
+          description: t('checkEmail'),
+        });
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t('error');
       toast({
-        title: t('signupSuccess'),
-        description: t('checkEmail'),
-      });
-    } catch (error: any) {
-      console.error('[DEBUG] Error in signUp method:', error.message);
-      toast({
-        title: t('error'),
-        description: error.message,
         variant: 'destructive',
+        title: t('error'),
+        description: message,
       });
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const signOut = async () => {
+    setLoading(true);
     try {
-      console.log('[DEBUG] Starting sign out process...');
-      
-      // First clear local state immediately for better UX
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        throw new Error(error.message || t('error'));
+      }
+
       setUser(null);
       setProfile(null);
-      
-      // Navigate to auth page first
-      navigate('/auth');
-      
-      // Then sign out from Supabase in the background
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('[DEBUG] Sign out error from Supabase:', error.message);
-        throw error;
-      }
-      
-      console.log('[DEBUG] Sign out successful, user state cleared');
-      
       toast({
-        title: t('signedOut'),
+        description: t('signedOut'),
       });
-    } catch (error: any) {
-      console.error('[DEBUG] Error in signOut method:', error.message);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t('error');
       toast({
-        title: t('error'),
-        description: error.message,
         variant: 'destructive',
+        title: t('error'),
+        description: message,
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const updateProfile = async (updates: Partial<Omit<UserProfile, "role">> & { role?: any }) => {
+  const updateProfile = async (updates: Partial<Profile>) => {
+    if (!user) {
+      console.error('No user to update profile for.');
+      return;
+    }
+
+    setLoading(true);
     try {
-      if (!user) throw new Error('No user logged in');
-      
-      setLoading(true);
-      
-      const result = await updateUserProfile(user.id, updates);
-      
-      if (!result.success) throw result.error;
-      
+      const updatedProfile = await updateUserProfile(user.id, updates);
+
+      if (updatedProfile) {
+        setProfile(updatedProfile);
+        toast({
+          description: t('profileUpdated'),
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: t('error'),
+          description: 'Failed to update profile.',
+        });
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t('error');
       toast({
-        title: t('profileUpdated'),
-      });
-    } catch (error: any) {
-      toast({
-        title: t('error'),
-        description: error.message,
         variant: 'destructive',
+        title: t('error'),
+        description: message,
       });
     } finally {
       setLoading(false);

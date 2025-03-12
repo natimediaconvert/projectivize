@@ -74,15 +74,15 @@ function App() {
   
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ThemeProvider defaultTheme="light" storageKey="ui-theme">
-          <TranslationProvider>
+      <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+        <TranslationProvider>
+          <AuthProvider>
             <RouterProvider router={router} />
             <Toaster />
             <Sonner />
-          </TranslationProvider>
-        </ThemeProvider>
-      </AuthProvider>
+          </AuthProvider>
+        </TranslationProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
