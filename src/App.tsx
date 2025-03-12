@@ -19,60 +19,58 @@ import "./App.css";
 
 const queryClient = new QueryClient();
 
-// Create the router outside of the component
-const createAppRouter = () => createBrowserRouter([
-  {
-    path: "/auth",
-    element: <AuthPage />,
-  },
-  {
-    path: "/",
-    element: (
-      <ProtectedRoute>
-        <Index />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/my-day",
-    element: (
-      <ProtectedRoute>
-        <MyDayPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/tasks",
-    element: (
-      <ProtectedRoute>
-        <TasksPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/goals",
-    element: (
-      <ProtectedRoute>
-        <GoalsPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/reports",
-    element: (
-      <ProtectedRoute>
-        <ReportsPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-]);
-
 function App() {
-  const router = createAppRouter();
+  // Create the router inside the component so it has access to all providers
+  const router = createBrowserRouter([
+    {
+      path: "/auth",
+      element: <AuthPage />,
+    },
+    {
+      path: "/",
+      element: (
+        <ProtectedRoute>
+          <Index />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/my-day",
+      element: (
+        <ProtectedRoute>
+          <MyDayPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/tasks",
+      element: (
+        <ProtectedRoute>
+          <TasksPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/goals",
+      element: (
+        <ProtectedRoute>
+          <GoalsPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/reports",
+      element: (
+        <ProtectedRoute>
+          <ReportsPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "*",
+      element: <NotFound />,
+    },
+  ]);
   
   return (
     <QueryClientProvider client={queryClient}>
