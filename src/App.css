@@ -11,7 +11,7 @@ body {
 }
 
 main {
-  margin-top: 5rem;
+  margin-left: 16rem; /* Adjust for sidebar width */
 }
 
 .logo {

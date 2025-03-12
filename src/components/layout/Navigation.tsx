@@ -36,7 +36,7 @@ export default function Navigation() {
   };
 
   return (
-    <Sidebar variant="sidebar" className="bg-white border-r z-30 h-[calc(100vh-5rem)]">
+    <Sidebar variant="sidebar" className="bg-white border-r z-30 fixed top-20 h-[calc(100vh-5rem)] left-0">
       <SidebarContent className="pt-0">
         <SidebarGroup>
           <SidebarGroupContent>
