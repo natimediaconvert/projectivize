@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Clock, CalendarDays, AlertTriangle, Circle, CircleEllipsis, CheckCircle2 } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
-import { useAuth } from '@/providers/auth/useAuth';
+import { useAuth } from '@/providers/auth/AuthProvider';
 import { useDayTasks } from '@/hooks/useDayTasks';
 
 const MyDayPage = () => {
