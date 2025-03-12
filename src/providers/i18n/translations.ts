@@ -49,6 +49,14 @@ export interface Translations {
   checkingSession: string;
   // Error messages
   signInTimeout: string;
+  // My Day page
+  hello: string;
+  todaysTasks: string;
+  weeklyTasks: string;
+  yesterdaysTasks: string;
+  carriedOver: string;
+  noPendingTasks: string;
+  createTask: string;
 }
 
 export const translations: Record<string, Translations> = {
@@ -103,6 +111,14 @@ export const translations: Record<string, Translations> = {
     checkingSession: "Checking session...",
     // Error messages
     signInTimeout: "Sign in request timed out. Please try again.",
+    // My Day page
+    hello: "Hello",
+    todaysTasks: "Today's Tasks",
+    weeklyTasks: "Weekly Tasks",
+    yesterdaysTasks: "Yesterday's Tasks",
+    carriedOver: "Carried Over",
+    noPendingTasks: "No Pending Tasks",
+    createTask: "Create Task",
   },
   he: {
     english: "אנגלית",
@@ -155,5 +171,13 @@ export const translations: Record<string, Translations> = {
     checkingSession: "בודק סשן...",
     // Error messages
     signInTimeout: "בקשת ההתחברות פג זמנה. אנא נסה שוב.",
+    // My Day page
+    hello: "שלום",
+    todaysTasks: "משימות היום",
+    weeklyTasks: "משימות שבועיות",
+    yesterdaysTasks: "משימות אתמול",
+    carriedOver: "נשארו",
+    noPendingTasks: "אין משימות בהמתנה",
+    createTask: "צור משימה",
   },
 };

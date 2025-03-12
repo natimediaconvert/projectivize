@@ -1,5 +1,4 @@
-
-import { Calendar, LayoutDashboard, ListTodo, Users, BarChart3, Target, Settings, FolderKanban } from "lucide-react";
+import { Calendar, LayoutDashboard, ListTodo, Users, BarChart3, Target, Settings, FolderKanban, Sun } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +19,8 @@ export default function Navigation() {
   const { direction } = useTheme();
 
   const navigationItems = [
-    { title: t("dashboard"), icon: LayoutDashboard, path: "/" },
+    { title: t("dashboard"), icon: LayoutDashboard, path: "/dashboard" },
+    { title: t("myDay"), icon: Sun, path: "/my-day" },
     { title: t("tasks"), icon: ListTodo, path: "/tasks" },
     { title: t("projects"), icon: FolderKanban, path: "/projects" },
     { title: t("team"), icon: Users, path: "/team" },
@@ -39,7 +39,7 @@ export default function Navigation() {
       <SidebarContent className="pt-0">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-100px)] overflow-y-auto mt-28">
+            <SidebarMenu className="flex flex-col gap-1 p-2 max-h-[calc(100vh-100px)] overflow-y-auto mt-36">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
