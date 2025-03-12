@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +16,7 @@ import ProfileSettings from "./pages/settings/ProfileSettings";
 import Unauthorized from "./pages/Unauthorized";
 import GoalsPage from "./pages/goals";
 import ReportsPage from "./pages/reports";
+import MyDayPage from "./pages/my-day";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,10 +40,11 @@ const App = () => (
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 
-                <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                <Route path="/my-day" element={<ProtectedRoute><MyDayPage /></ProtectedRoute>} />
                 <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
-                <Route path="/my-day" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
                 <Route path="/projects" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
                 <Route path="/team" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
                 <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
