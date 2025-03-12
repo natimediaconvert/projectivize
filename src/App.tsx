@@ -1,64 +1,89 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "./providers/ThemeProvider";
+import { Toaster } from "./components/ui/toaster";
+import { Toaster as Sonner } from "./components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from '@/providers/AuthProvider';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { TranslationProvider } from '@/providers/i18n/TranslationProvider';
-import { ThemeProvider } from '@/providers/ThemeProvider';
-
-import Index from "./pages/Index";
+import TranslationProvider from "./providers/i18n/TranslationProvider";
+import { AuthProvider } from "./providers/auth/AuthProvider";
+import { AuthPage } from "./pages/auth";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import NotFound from "./pages/NotFound";
+import Index from "./pages/Index";
 import TasksPage from "./pages/tasks";
-import AuthPage from "./pages/auth";
-import ProfileSettings from "./pages/settings/ProfileSettings";
-import Unauthorized from "./pages/Unauthorized";
 import GoalsPage from "./pages/goals";
 import ReportsPage from "./pages/reports";
+import MyDayPage from "./pages/my-day";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
+import "./App.css";
+
+const queryClient = new QueryClient();
+
+const router = createBrowserRouter([
+  {
+    path: "/auth",
+    element: <AuthPage />,
   },
-});
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/my-day",
+    element: (
+      <ProtectedRoute>
+        <MyDayPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/tasks",
+    element: (
+      <ProtectedRoute>
+        <TasksPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/goals",
+    element: (
+      <ProtectedRoute>
+        <GoalsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/reports",
+    element: (
+      <ProtectedRoute>
+        <ReportsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
+]);
 
-const App = () => (
-  <BrowserRouter>
+function App() {
+  return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <TranslationProvider>
-          <AuthProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <Routes>
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="/unauthorized" element={<Unauthorized />} />
-                
-                <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
-                <Route path="/my-day" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
-                <Route path="/projects" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
-                <Route path="/team" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
-                <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
-                <Route path="/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
-                <Route path="/settings" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
-                
-                {/* Fallback route - redirect to auth if not logged in, otherwise 404 */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </TooltipProvider>
-          </AuthProvider>
-        </TranslationProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+          <TranslationProvider>
+            <RouterProvider router={router} />
+            <Toaster />
+            <Sonner />
+          </TranslationProvider>
+        </ThemeProvider>
+      </AuthProvider>
     </QueryClientProvider>
-  </BrowserRouter>
-);
+  );
+}
 
 export default App;

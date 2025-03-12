@@ -1,5 +1,5 @@
 
-import { Calendar, LayoutDashboard, ListTodo, Users, BarChart3, Target, Settings, FolderKanban } from "lucide-react";
+import { Calendar, LayoutDashboard, ListTodo, Users, BarChart3, Target, Settings, FolderKanban, Sun } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +21,7 @@ export default function Navigation() {
 
   const navigationItems = [
     { title: t("dashboard"), icon: LayoutDashboard, path: "/" },
+    { title: t("my_day"), icon: Sun, path: "/my-day" },
     { title: t("tasks"), icon: ListTodo, path: "/tasks" },
     { title: t("projects"), icon: FolderKanban, path: "/projects" },
     { title: t("team"), icon: Users, path: "/team" },
