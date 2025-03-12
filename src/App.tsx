@@ -19,7 +19,8 @@ import "./App.css";
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([
+// Create the router outside of the component
+const createAppRouter = () => createBrowserRouter([
   {
     path: "/auth",
     element: <AuthPage />,
@@ -71,6 +72,8 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const router = createAppRouter();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
