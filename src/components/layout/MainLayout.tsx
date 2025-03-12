@@ -14,7 +14,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           <TopBar />
           <div className="flex flex-1">
             <Navigation />
-            <main id="main-content" className="flex-1 p-4 md:p-6 overflow-auto animate-fade-in mt-20">
+            <main id="main-content" className="flex-1 p-4 md:p-6 overflow-auto animate-fade-in pt-24 md:ml-64">
               {children}
             </main>
           </div>

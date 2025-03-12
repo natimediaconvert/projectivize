@@ -10,9 +10,10 @@ body {
   padding: 0;
 }
 
-main {
-  margin-left: 16rem; /* Adjust for sidebar width */
-}
+/* Removing the fixed margin to let the layout handle it properly */
+/* main {
+  margin-left: 16rem;
+} */
 
 .logo {
   height: 6em;
